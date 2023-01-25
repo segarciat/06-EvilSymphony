@@ -6,20 +6,23 @@ import java.nio.file.Path;
 
 public class Game {
     private static final String SPLASH_FILE = "src/main/resources/splash.txt";
-
-    private String splashText;
+    private static final String GAME_SUMMARY_FILE = "src/main/resources/game_summary.txt";
 
     public void run() {
-        loadSplashText();
+        String splashText = loadText(SPLASH_FILE);
+        String gameSummary = loadText(GAME_SUMMARY_FILE);
 
-        System.out.println(splashText);
+        System.out.printf("%s\n\n", splashText);
+        System.out.println(gameSummary);
     }
 
-    private void loadSplashText() {
+    private String loadText(String filename) {
+        String text = "";
         try {
-            splashText = Files.readString(Path.of(SPLASH_FILE));
+            text = Files.readString(Path.of(filename));
         } catch(IOException e) {
             e.printStackTrace();
         }
+        return text;
     }
 }
