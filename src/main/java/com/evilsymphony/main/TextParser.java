@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.util.Scanner;
 
 public class TextParser {
+    public static final String QUIT = "QUIT";
     private final Scanner scanner = new Scanner(System.in);
 
     /**
@@ -35,5 +36,11 @@ public class TextParser {
             if (userInput.matches(regex))
                 return userInput;
         }
+    }
+
+    public String promptAndCheckForQuit(String message, String regex) {
+        message = String.format("%s%s\n>", message, QUIT);
+        regex = String.format("%s|(%s)", regex, QUIT);
+        return prompt(message, regex);
     }
 }

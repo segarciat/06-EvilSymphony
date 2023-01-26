@@ -13,11 +13,12 @@ public class Game {
         System.out.printf("%s\n\n", splashText);
         System.out.printf("%s\n\n", gameSummary);
 
-        String userInput = parser.prompt("What would you like to do?\nPlay\nQuit\n>", "(?i)(PLAY|QUIT)");
+        String userInput = parser.promptAndCheckForQuit("What would you like to do?\nPlay\n", "(?i)(PLAY)");
 
-        if ("QUIT".equals(userInput)) {
+
+        if (userInput.equals(TextParser.QUIT)) {
             System.out.println("Good bye!");
-        } else if ("PLAY".equals(userInput))
+        } else if (userInput.equals("PLAY"))
             startGame();
 
     }
@@ -25,8 +26,9 @@ public class Game {
     private void startGame() {
         System.out.println("The game has started");
         String userInput = "";
-        while (!userInput.equals("QUIT")) {
-            userInput = parser.prompt("What would you like to do?\nQuit\n>", "(?i)(QUIT)");
+        while (!userInput.equals(TextParser.QUIT)) {
+            userInput = parser.promptAndCheckForQuit("What would you like to do?\n", "\\d");
+            System.out.println("Input matched.");
         }
         System.out.println("Thanks for playing!");
     }
