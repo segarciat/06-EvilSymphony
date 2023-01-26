@@ -1,6 +1,7 @@
 package com.evilsymphony.main;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 
@@ -8,12 +9,14 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Map;
 
 public class Game {
     private static final String SPLASH_FILE = "src/main/resources/splash.txt";
     private static final String GAME_SUMMARY_FILE = "src/main/resources/game_summary.txt";
     private static final String LOCATION_FILE = "src/main/resources/location.json";
     private static final String NPC_FILE = "src/main/resources/npc.json";
+    private Location currentLocation= null;
 
 
     private final TextParser parser = new TextParser();
@@ -30,11 +33,7 @@ public class Game {
         System.out.printf("%s\n\n", gameSummary);
 
         // testing Location load
-        List<Location> listL = loadLocations(LOCATION_FILE);
-        for (Location location : listL) {
-            System.out.println(location.getDirections());
-        }
-        System.out.println("\n");
+
 
         String userInput = parser.promptAndCheckForQuit("What would you like to do?\nPlay\n", "(?i)(PLAY)");
 
@@ -48,10 +47,17 @@ public class Game {
 
     }
 
+
     /**
      * Initializes main game loop.
      */
     private void startGame() {
+
+        Map<String, Location> locations = loadLocations(LOCATION_FILE);
+
+        currentLocation = locations.get("Music Hall");
+        System.out.printf("Current Location = %s\n",currentLocation.getName());
+
         System.out.println("The game has started");
         String userInput = "";
         while (!userInput.equals(TextParser.QUIT)) {
@@ -68,22 +74,24 @@ public class Game {
         System.out.println("Thanks for playing!");
     }
 
-    public static List<Location> loadLocations(String jsonFile) {
-        // Create a Gson object for parsing JSON data
-        Gson gson = new Gson();
-
+    public static Map<String,Location> loadLocations(String jsonFile) {
         // Define the type of the object that will be returned
-        Type locationListType = new TypeToken<List<Location>>(){}.getType();
+        Type locationMapType = new TypeToken<Map<String,Location>>(){}.getType();
+
+        // Create a new instance of GsonBuilder and register a custom deserializer
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(locationMapType,new LocationsDeserializer())
+                .create();
 
         // Create a null list of Location objects to store the location data
-        List<Location> locations = null;
+        Map<String,Location> locations = null;
 
         try {
             // Open a JsonReader using the FileReader class, passing the jsonFile as parameter
             JsonReader reader = new JsonReader(new FileReader(jsonFile));
 
             // Use the gson object to parse the json data in the jsonFile, using the jsonreader and the locationListType
-            locations = gson.fromJson(reader, locationListType);
+            locations = gson.fromJson(reader, locationMapType);
         } catch (FileNotFoundException ex) {
             // If the specified jsonFile could not be found, print the stack trace of the exception
             ex.printStackTrace();
