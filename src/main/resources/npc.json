@@ -1,0 +1,111 @@
+[
+  {
+    "name": "Rocky",
+    "location": "",
+    "dialog": [
+      "aint go lie",
+      "baby",
+      "bye bye bye"
+    ],
+    "actions": []
+  },
+
+  {
+    "name": "Jay",
+    "location": "",
+    "dialog": [
+      "aint go lie",
+      "baby",
+      "bye bye bye"
+    ],
+    "actions": []
+  },
+
+  {
+    "name": "Suzy",
+    "location": "",
+    "dialog": [
+      "aint go lie",
+      "baby",
+      "bye bye bye"
+    ],
+    "actions": []
+  },
+
+  {
+    "name": "Larry",
+    "location": "",
+    "dialog": [
+      "aint go lie",
+      "baby",
+      "bye bye bye"
+    ],
+    "actions": []
+  },
+
+  {
+    "name": "Diana",
+    "location": "",
+    "dialog": [
+      "aint go lie",
+      "baby",
+      "bye bye bye"
+    ],
+    "actions": []
+  },
+
+  {
+    "name": "Friend",
+    "location": "",
+    "dialog": [
+      "aint go lie",
+      "baby",
+      "bye bye bye"
+    ],
+    "actions": []
+  },
+
+  {
+    "name": "Johnny The Bartender",
+    "location": "Bar",
+    "dialog": [
+      "aint go lie",
+      "baby",
+      "bye bye bye"
+    ],
+    "actions": []
+  },
+
+  {
+    "name": "Security Guard",
+    "location": "Bar",
+    "dialog": [
+      "aint go lie",
+      "baby",
+      "bye bye bye"
+    ],
+    "actions": []
+  },
+
+   {
+    "name": "Diva",
+    "location": "Bar",
+    "dialog": [
+      "aint go lie",
+      "baby",
+      "bye bye bye"
+    ],
+    "actions": []
+  },
+
+  {
+    "name": "Usher",
+    "location": "Bar",
+    "dialog": [
+      "aint go lie",
+      "baby",
+      "bye bye bye"
+    ],
+    "actions": []
+  }
+]
