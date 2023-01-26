@@ -38,6 +38,9 @@ public class TextParser {
         }
     }
 
+    /**
+     * Same as prompt(), but also listens for QUIT.
+     */
     public String promptAndCheckForQuit(String message, String regex) {
         message = String.format("%s%s\n>", message, QUIT);
         regex = String.format("%s|(%s)", regex, QUIT);

@@ -6,6 +6,9 @@ public class Game {
 
     private final TextParser parser = new TextParser();
 
+    /**
+     * Starting point of the application.
+     */
     public void run() {
         String splashText = parser.loadText(SPLASH_FILE);
         String gameSummary = parser.loadText(GAME_SUMMARY_FILE);
@@ -23,13 +26,23 @@ public class Game {
 
     }
 
+    /**
+     * Initializes main game loop.
+     */
     private void startGame() {
         System.out.println("The game has started");
         String userInput = "";
         while (!userInput.equals(TextParser.QUIT)) {
-            userInput = parser.promptAndCheckForQuit("What would you like to do?\n", "\\d");
-            System.out.println("Input matched.");
+            userInput = parser.promptAndCheckForQuit("Enter a number\n", "\\d+");
+            System.out.println("Input matched: " + userInput);
         }
+        handleQuit();
+    }
+
+    /**
+     * Performs any necessary cleanup and or closes files.
+     */
+    private void handleQuit() {
         System.out.println("Thanks for playing!");
     }
 }
