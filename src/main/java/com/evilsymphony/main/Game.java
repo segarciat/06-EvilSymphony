@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class Game {
@@ -15,6 +16,7 @@ public class Game {
     private static final String GAME_SUMMARY_FILE = "src/main/resources/game_summary.txt";
     private static final String LOCATION_FILE = "src/main/resources/location.json";
     private static final String NPC_FILE = "src/main/resources/npc.json";
+    private static final String COMMAND_FILE = "src/main/resources/commands.json";
 
 
     private final TextParser parser = new TextParser();
@@ -29,7 +31,7 @@ public class Game {
         System.out.printf("%s\n\n", splashText);
         System.out.printf("%s\n\n", gameSummary);
 
-        String userInput = parser.promptAndCheckForQuit("What would you like to do?\nPlay\n", "(?i)(PLAY)");
+        String userInput = parser.promptAndCheckForQuit("What would you like to do?\nPlay\n", "(?i)(PLAY)").toUpperCase();
 
         if (userInput.equals(TextParser.QUIT)) {
             System.out.println("Good bye!");
@@ -44,6 +46,7 @@ public class Game {
     private void startGame() {
 
         Map<String, Location> locations = Location.loadLocations(LOCATION_FILE);
+        List<PlayerCommand> commandList = PlayerCommand.loadCommands(COMMAND_FILE);
 
         Location currentLocation = locations.get("Music Hall");
 
@@ -57,8 +60,9 @@ public class Game {
 
             sb.append("You are in ").append(currentLocation.getName())
                     .append("\n")
-                    .append(currentLocation.getWelcome_message())
+                    .append(currentLocation.getWelcomeMessage())
                     .append("\n");
+
 
             for (String locationName : directions){
                 sb.append("Go to ").append(locationName).append("\n");
@@ -67,15 +71,29 @@ public class Game {
                 sb.append("examine ").append(itemName).append("\n");
             }
             for (String npc : npcs){
-                sb.append("interact with ").append(npc).append("\n");
+                sb.append("talk with ").append(npc).append("\n");
             }
 
 
-            userInput = parser.promptAndCheckForQuit(sb.toString(),"");
+            userInput = parser.promptAndCheckForQuit(sb.toString(),"(?i)help").toUpperCase();
             System.out.println("Input matched: " + userInput);
+
+            if ("help".equals(userInput)) {
+                displayHelpMenu(commandList);
+            }
         }
         handleQuit();
     }
+
+    private void displayHelpMenu(List<PlayerCommand> cList) {
+
+        System.out.println("\n-----------HELP MENU-------------");
+        for (PlayerCommand command : cList) {
+            System.out.printf("%s \n\n",command.getDescription());
+        }
+        System.out.println();
+    }
+
 
     /**
      * Performs any necessary cleanup and or closes files.
@@ -83,6 +101,7 @@ public class Game {
     private void handleQuit() {
         System.out.println("Thanks for playing!");
     }
+
 
 
 

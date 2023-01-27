@@ -1,38 +1,38 @@
 [
   {
     "name": "Has",
-    "helpText": "Has - Item: Shows the current contents of your inventory."
+    "helpText": "Shows the current contents of your inventory."
   },
   {
-    "name": "Get",
-    "helpText": "Get - Item: Takes an item and places it into your inventory."
+    "name": "Get ITEM",
+    "helpText": "Takes an item and places it into your inventory."
   },
   {
-    "name": "Go",
-    "helpText": "Go : Direction: Moves you to the new direction"
+    "name": "Go LOCATION",
+    "helpText": "Moves you to the new direction"
   },
   {
     "name": "Quit",
-    "helpText": "Quit: Ends the game."
+    "helpText": "Ends the game."
   },
   {
-    "name": "Interact",
+    "name": "Interact INSTRUMENT",
     "helpText": "Examine an item."
   },
   {
-    "name": "Talk",
-    "helpText": "Talk - npc: Start a dialog with npc."
+    "name": "Talk NPC",
+    "helpText": "Start a dialog with npc."
   },
   {
     "name": "Restart",
     "helpText": "Restart game."
   },
   {
-    "name": "Fix",
-    "helpText": "Fix - item: Repair an item."
+    "name": "Fix INSTRUMENT",
+    "helpText": "Repair an item."
   },
   {
-    "name": "Replace",
-    "helpText": "Replace - item:  Swap with existing item."
+    "name": "Replace ITEM",
+    "helpText": "Swap with existing item."
   }
 ]

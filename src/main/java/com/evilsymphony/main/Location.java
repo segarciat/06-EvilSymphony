@@ -14,15 +14,15 @@ import java.util.Map;
 
 class Location {
     private String name;
-    private String welcome_message;
+    private String welcomeMessage;
     private List<String> NPCs;
     private List<String> items;
     private List<String> directions;
 
-    public Location(String name, String welcome_message, List<String> NPCs, List<String> items, List<String> directions) {
+    public Location(String name, String welcomeMessage, List<String> NPCs, List<String> items, List<String> directions) {
         // update later
         this.name = name;
-        this.welcome_message = welcome_message;
+        this.welcomeMessage = welcomeMessage;
         this.NPCs = NPCs;
         this.items = items;
         this.directions = directions;
@@ -65,8 +65,8 @@ class Location {
     }
 
 
-    public String getWelcome_message() {
-        return welcome_message;
+    public String getWelcomeMessage() {
+        return welcomeMessage;
     }
 
 
