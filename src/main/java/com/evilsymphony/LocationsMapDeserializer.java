@@ -1,14 +1,13 @@
-package com.evilsymphony.main;
+package com.evilsymphony;
 
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
-class LocationsMapDeserializer implements JsonDeserializer<Map<String,Location>> {
+class LocationsMapDeserializer implements JsonDeserializer<Map<String, Location>> {
 
 
 

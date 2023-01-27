@@ -1,4 +1,4 @@
-package com.evilsymphony.main;
+package com.evilsymphony;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -8,12 +8,11 @@ import com.google.gson.stream.JsonReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.lang.reflect.Type;
-import java.util.List;
 import java.util.Map;
 
 public class Npc {
     private String name;
-    private Map<String, String> dialog;
+    private final Map<String, String> dialog;
 
     public Npc(String name, Map<String, String> dialog) {
         this.name = name;

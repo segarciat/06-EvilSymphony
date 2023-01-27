@@ -1,4 +1,4 @@
-package com.evilsymphony.main;
+package com.evilsymphony;
 
 public enum Color {
     GREEN("[32m", "[42m"),
