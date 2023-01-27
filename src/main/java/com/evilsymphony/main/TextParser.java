@@ -28,22 +28,32 @@ public class TextParser {
      *
      * Returns the user's input, in upper case, only if it matches the regex.
      */
-    public String prompt(String message, String regex) {
+    public String prompt(String message, String regex, String helpText) {
 
         while (true) {
             System.out.print(message);
             String userInput = scanner.nextLine().strip();
             if (userInput.matches(regex))
                 return userInput;
+            else {
+                System.out.println(helpText);
+                promptContinue();
+            }
         }
+    }
+
+    public void promptContinue() {
+        System.out.println("Press c to continue game");
+        while (!scanner.nextLine().equalsIgnoreCase("C"))
+            ;
     }
 
     /**
      * Same as prompt(), but also listens for QUIT.
      */
-    public String promptAndCheckForQuit(String message, String regex) {
+    public String promptAndCheckForQuit(String message, String regex, String helpText) {
         message = String.format("%s%s\n>", message, QUIT);
         regex = String.format("%s|(%s)", regex, QUIT);
-        return prompt(message, regex);
+        return prompt(message, regex, helpText);
     }
 }

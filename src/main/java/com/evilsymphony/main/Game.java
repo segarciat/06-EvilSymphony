@@ -6,7 +6,6 @@ import com.google.gson.stream.JsonReader;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.lang.reflect.Array;
 import java.lang.reflect.Type;
 import java.util.*;
 
@@ -30,7 +29,11 @@ public class Game {
         System.out.printf("%s\n\n", splashText);
         System.out.printf("%s\n\n", gameSummary);
 
-        String userInput = parser.promptAndCheckForQuit("What would you like to do?\nPlay\n", "(?i)(PLAY)").toUpperCase();
+        String userInput = parser.promptAndCheckForQuit(
+                "What would you like to do?\nPlay\n",
+                "(?i)(PLAY)",
+                "\nInvalid Command. Please enter Play or Quit\n")
+                .toUpperCase();
 
         if (userInput.equals(TextParser.QUIT)) {
             System.out.println("Good bye!");
@@ -55,13 +58,13 @@ public class Game {
             List<String> items = currentLocation.getItems();
             List<String> npcs = currentLocation.getNPCs();
 
+            // Describe the room and what the user can do here.
             StringBuilder sb = new StringBuilder();
 
             sb.append("You are in ").append(currentLocation.getName())
                     .append("\n")
                     .append(currentLocation.getWelcomeMessage())
                     .append("\n");
-
 
             for (String locationName : directions){
                 sb.append("Go ").append(locationName).append("\n");
@@ -73,8 +76,11 @@ public class Game {
                 sb.append("talk ").append(npc).append("\n");
             }
 
-
-            userInput = parser.promptAndCheckForQuit(sb.toString(),"(?i)(GO|TALK|EXAMINE) ([\\w\\s]+)|help").toUpperCase();
+            userInput = parser.promptAndCheckForQuit(
+                    sb.toString(),
+                    "(?i)(GO|TALK|EXAMINE) ([\\w\\s]+)|help",
+                    Color.RED.setFontColor("Invalid Command. To view list of valid commands, type HELP"))
+                    .toUpperCase();
             System.out.println("Input matched: " + userInput);
 
             List<String> commandParts = parseCommand(userInput);
@@ -83,20 +89,19 @@ public class Game {
 
             if ("help".equalsIgnoreCase(command)) {
                 displayHelpMenu(commandList);
-            }else if("go".equalsIgnoreCase(command)) {
+            } else if("go".equalsIgnoreCase(command)) {
                 String destination = commandParts.get(1);
 
                 if (directions.contains(destination)){
                     currentLocation = locations.get(destination);
                 }else {
-                    System.out.printf("%s is invalid\n",destination);
+                    System.out.println(Color.RED.setFontColor(String.format("%s is invalid\n",destination)));
+                    parser.promptContinue();
                 }
             }
         }
         handleQuit();
     }
-
-
 
     private void displayHelpMenu(List<PlayerCommand> cList) {
 
