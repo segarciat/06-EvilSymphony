@@ -4,13 +4,11 @@ import java.util.List;
 
 public class Npc {
     private String name;
-    private String location;
     private List<String> dialog;
     private List<String> actions;
 
-    public Npc(String name, String location, List<String> dialog, List<String> actions) {
+    public Npc(String name, List<String> dialog, List<String> actions) {
         this.name = name;
-        this.location = location;
         this.dialog = dialog;
         this.actions = actions;
     }
@@ -23,14 +21,6 @@ public class Npc {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
     }
 
     public List<String> getDialog() {

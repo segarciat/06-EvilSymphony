@@ -32,7 +32,7 @@ public class TextParser {
 
         while (true) {
             System.out.print(message);
-            String userInput = scanner.next().strip().toUpperCase();
+            String userInput = scanner.nextLine().strip().toUpperCase();
             if (userInput.matches(regex))
                 return userInput;
         }

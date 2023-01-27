@@ -1,7 +1,6 @@
 package com.evilsymphony.main;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 
@@ -16,7 +15,6 @@ public class Game {
     private static final String GAME_SUMMARY_FILE = "src/main/resources/game_summary.txt";
     private static final String LOCATION_FILE = "src/main/resources/location.json";
     private static final String NPC_FILE = "src/main/resources/npc.json";
-    private Location currentLocation= null;
 
 
     private final TextParser parser = new TextParser();
@@ -28,17 +26,10 @@ public class Game {
         String splashText = parser.loadText(SPLASH_FILE);
         String gameSummary = parser.loadText(GAME_SUMMARY_FILE);
 
-
         System.out.printf("%s\n\n", splashText);
         System.out.printf("%s\n\n", gameSummary);
 
-        // testing Location load
-
-
         String userInput = parser.promptAndCheckForQuit("What would you like to do?\nPlay\n", "(?i)(PLAY)");
-
-
-
 
         if (userInput.equals(TextParser.QUIT)) {
             System.out.println("Good bye!");
@@ -47,21 +38,40 @@ public class Game {
 
     }
 
-
     /**
      * Initializes main game loop.
      */
     private void startGame() {
 
-        Map<String, Location> locations = loadLocations(LOCATION_FILE);
+        Map<String, Location> locations = Location.loadLocations(LOCATION_FILE);
 
-        currentLocation = locations.get("Music Hall");
-        System.out.printf("Current Location = %s\n",currentLocation.getName());
+        Location currentLocation = locations.get("Music Hall");
 
-        System.out.println("The game has started");
         String userInput = "";
         while (!userInput.equals(TextParser.QUIT)) {
-            userInput = parser.promptAndCheckForQuit("Enter a number\n", "\\d+");
+            List<String> directions = currentLocation.getDirections();
+            List<String> items = currentLocation.getItems();
+            List<String> npcs = currentLocation.getNPCs();
+
+            StringBuilder sb = new StringBuilder();
+
+            sb.append("You are in ").append(currentLocation.getName())
+                    .append("\n")
+                    .append(currentLocation.getWelcome_message())
+                    .append("\n");
+
+            for (String locationName : directions){
+                sb.append("Go to ").append(locationName).append("\n");
+            }
+            for (String itemName : items){
+                sb.append("examine ").append(itemName).append("\n");
+            }
+            for (String npc : npcs){
+                sb.append("interact with ").append(npc).append("\n");
+            }
+
+
+            userInput = parser.promptAndCheckForQuit(sb.toString(),"");
             System.out.println("Input matched: " + userInput);
         }
         handleQuit();
@@ -74,32 +84,7 @@ public class Game {
         System.out.println("Thanks for playing!");
     }
 
-    public static Map<String,Location> loadLocations(String jsonFile) {
-        // Define the type of the object that will be returned
-        Type locationMapType = new TypeToken<Map<String,Location>>(){}.getType();
 
-        // Create a new instance of GsonBuilder and register a custom deserializer
-        Gson gson = new GsonBuilder()
-                .registerTypeAdapter(locationMapType,new LocationsDeserializer())
-                .create();
-
-        // Create a null list of Location objects to store the location data
-        Map<String,Location> locations = null;
-
-        try {
-            // Open a JsonReader using the FileReader class, passing the jsonFile as parameter
-            JsonReader reader = new JsonReader(new FileReader(jsonFile));
-
-            // Use the gson object to parse the json data in the jsonFile, using the jsonreader and the locationListType
-            locations = gson.fromJson(reader, locationMapType);
-        } catch (FileNotFoundException ex) {
-            // If the specified jsonFile could not be found, print the stack trace of the exception
-            ex.printStackTrace();
-        }
-
-        // Return the locations, which contains the location data from the JSON file
-        return locations;
-    }
 
 
     public static List<Npc> loadNpc(String jsonFile) {
