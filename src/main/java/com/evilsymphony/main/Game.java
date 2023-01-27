@@ -48,6 +48,7 @@ public class Game {
     private void startGame() {
 
         Map<String, Location> locations = Location.loadLocations(LOCATION_FILE);
+        Map<String, Npc> allNPCs = Npc.loadNpcs(NPC_FILE);
         List<PlayerCommand> commandList = PlayerCommand.loadCommands(COMMAND_FILE);
 
         Location currentLocation = locations.get("Music Hall".toUpperCase());
@@ -56,7 +57,7 @@ public class Game {
         while (!userInput.equals(TextParser.QUIT)) {
             List<String> directions = currentLocation.getDirections();
             List<String> items = currentLocation.getItems();
-            List<String> npcs = currentLocation.getNPCs();
+            List<String> presentNPCs = currentLocation.getNPCs();
 
             // Describe the room and what the user can do here.
             StringBuilder sb = new StringBuilder();
@@ -72,7 +73,7 @@ public class Game {
             for (String itemName : items){
                 sb.append("examine ").append(itemName).append("\n");
             }
-            for (String npc : npcs){
+            for (String npc : presentNPCs){
                 sb.append("talk ").append(npc).append("\n");
             }
 
@@ -96,6 +97,16 @@ public class Game {
                     currentLocation = locations.get(destination);
                 }else {
                     System.out.println(Color.RED.setFontColor(String.format("%s is invalid\n",destination)));
+                    parser.promptContinue();
+                }
+            } else if ("talk".equalsIgnoreCase(command)) {
+                String npc = commandParts.get(1);
+
+                if (presentNPCs.contains(npc)) {
+                    Npc selectedNPC = allNPCs.get(npc);
+                    System.out.println(selectedNPC.getDialog().get("default"));
+                } else {
+                    System.out.println(Color.RED.setFontColor(String.format("%s is invalid\n",npc)));
                     parser.promptContinue();
                 }
             }
@@ -142,29 +153,5 @@ public class Game {
 
         return commandParts;
 
-    }
-    public static List<Npc> loadNpc(String jsonFile) {
-        // Create a Gson object for parsing JSON data
-        Gson gson = new Gson();
-
-        // Define the type of the object that will be returned
-        Type npcListType = new TypeToken<List<Npc>>(){}.getType();
-
-        // Create a empty list of Npc objects to store the NPC data
-        List<Npc> npcList = null;
-
-        try {
-            // Open a JsonReader using the FileReader class, passing the jsonFile as parameter
-            JsonReader reader = new JsonReader(new FileReader(jsonFile));
-
-            // Use the gson object to parse the json data in the jsonFile, using the jsonreader and the npcListType
-            npcList = gson.fromJson(reader, npcListType);
-        } catch (FileNotFoundException ex) {
-            // If the specified jsonFile could not be found, print the stack trace of the exception
-            ex.printStackTrace();
-        }
-
-        // Return the npcList, which contains the NPC data from the JSON file
-        return npcList;
     }
 }
