@@ -79,6 +79,17 @@
     "directions": [
       "Backstage"
     ]
+  },
+
+  {
+    "name": "Bar",
+    "welcomeMessage": "is that johnny!",
+    "NPCs": [],
+    "items" : [],
+    "directions": [
+      "Backstage",
+      "Bathroom"
+    ]
   }
 
 ]
