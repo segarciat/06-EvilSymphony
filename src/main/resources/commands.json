@@ -16,8 +16,8 @@
     "helpText": "Ends the game."
   },
   {
-    "name": "Interact INSTRUMENT",
-    "helpText": "Examine an item."
+    "name": "Examine ITEM",
+    "helpText": "Provides information about an item."
   },
   {
     "name": "Talk NPC",

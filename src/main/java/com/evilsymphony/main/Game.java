@@ -6,10 +6,9 @@ import com.google.gson.stream.JsonReader;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.lang.reflect.Array;
 import java.lang.reflect.Type;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 public class Game {
     private static final String SPLASH_FILE = "src/main/resources/splash.txt";
@@ -48,7 +47,7 @@ public class Game {
         Map<String, Location> locations = Location.loadLocations(LOCATION_FILE);
         List<PlayerCommand> commandList = PlayerCommand.loadCommands(COMMAND_FILE);
 
-        Location currentLocation = locations.get("Music Hall");
+        Location currentLocation = locations.get("Music Hall".toUpperCase());
 
         String userInput = "";
         while (!userInput.equals(TextParser.QUIT)) {
@@ -65,25 +64,39 @@ public class Game {
 
 
             for (String locationName : directions){
-                sb.append("Go to ").append(locationName).append("\n");
+                sb.append("Go ").append(locationName).append("\n");
             }
             for (String itemName : items){
                 sb.append("examine ").append(itemName).append("\n");
             }
             for (String npc : npcs){
-                sb.append("talk with ").append(npc).append("\n");
+                sb.append("talk ").append(npc).append("\n");
             }
 
 
-            userInput = parser.promptAndCheckForQuit(sb.toString(),"(?i)help").toUpperCase();
+            userInput = parser.promptAndCheckForQuit(sb.toString(),"(?i)(GO|TALK|EXAMINE) ([\\w\\s]+)|help").toUpperCase();
             System.out.println("Input matched: " + userInput);
 
-            if ("help".equals(userInput)) {
+            List<String> commandParts = parseCommand(userInput);
+            String command = commandParts.get(0);
+
+
+            if ("help".equalsIgnoreCase(command)) {
                 displayHelpMenu(commandList);
+            }else if("go".equalsIgnoreCase(command)) {
+                String destination = commandParts.get(1);
+
+                if (directions.contains(destination)){
+                    currentLocation = locations.get(destination);
+                }else {
+                    System.out.printf("%s is invalid\n",destination);
+                }
             }
         }
         handleQuit();
     }
+
+
 
     private void displayHelpMenu(List<PlayerCommand> cList) {
 
@@ -103,9 +116,28 @@ public class Game {
     }
 
 
+    private List<String> parseCommand(String userInput) {
+        String[] inputArray = userInput.split(" ");
+        ArrayList<String> commandParts = new ArrayList<>();
+        String command = inputArray[0];
+        commandParts.add(command);
 
+        if (!"help".equalsIgnoreCase(command) && !"quit".equalsIgnoreCase(command)) {
 
+            //        String location = String.join("",inputArray);
+            //        String location = userInput.substring(command.length());
 
+            String[] afterCommandArray = Arrays.copyOfRange(inputArray, 1, inputArray.length);
+
+            String afterCommandString = String.join(" ",afterCommandArray);
+
+            commandParts.add(afterCommandString);
+
+        }
+
+        return commandParts;
+
+    }
     public static List<Npc> loadNpc(String jsonFile) {
         // Create a Gson object for parsing JSON data
         Gson gson = new Gson();

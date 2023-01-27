@@ -10,6 +10,7 @@ import java.io.FileReader;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 class Location {
@@ -23,9 +24,10 @@ class Location {
         // update later
         this.name = name;
         this.welcomeMessage = welcomeMessage;
-        this.NPCs = NPCs;
-        this.items = items;
-        this.directions = directions;
+        this.NPCs = NPCs.stream().map(String::toUpperCase).collect(Collectors.toList());
+        this.items = items.stream().map(String::toUpperCase).collect(Collectors.toList());
+        this.directions = directions.stream().map(String::toUpperCase).collect(Collectors.toList());
+
     }
 
     //methods
@@ -33,10 +35,11 @@ class Location {
     public static Map<String,Location> loadLocations(String jsonFile) {
         // Define the type of the object that will be returned
         Type locationMapType = new TypeToken<Map<String,Location>>(){}.getType();
+        Type locationType = new TypeToken<Location>(){}.getType();
 
         // Create a new instance of GsonBuilder and register a custom deserializer
         Gson gson = new GsonBuilder()
-                .registerTypeAdapter(locationMapType,new LocationsDeserializer())
+                .registerTypeAdapter(locationMapType,new LocationsMapDeserializer())
                 .create();
 
         // Create a null list of Location objects to store the location data

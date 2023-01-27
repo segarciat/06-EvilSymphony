@@ -5,20 +5,26 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
-class LocationsDeserializer implements JsonDeserializer<Map<String,Location>> {
+class LocationsMapDeserializer implements JsonDeserializer<Map<String,Location>> {
+
+
 
     @Override
     public Map<String, Location> deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+
+        // Type object to define the type of the Location class
+        Type locationType = new TypeToken<Location>(){}.getType();
+
         // Map to store the location objects
         Map <String,Location> locationMap = new HashMap<String,Location>();
 
         // Gson object to deserialize the JSON elements to the locationMap
-        Gson gson = new Gson();
-
-        // Type object to define the type of the Location class
-        Type locationType = new TypeToken<Location>(){}.getType();
+        Gson gson = new GsonBuilder().
+                registerTypeAdapter(locationType, new LocationDeserializer())
+                .create();
 
         // Iterate through the JSON array
         for (JsonElement element : jsonElement.getAsJsonArray()){
@@ -33,7 +39,7 @@ class LocationsDeserializer implements JsonDeserializer<Map<String,Location>> {
             Location location = gson.fromJson(element, locationType);
 
             // Add the location to the map with the name as the key
-            locationMap.put(locationName,location);
+            locationMap.put(locationName.toUpperCase(),location);
         }
         return locationMap;
     }
