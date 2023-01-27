@@ -90,6 +90,17 @@
       "Backstage",
       "Bathroom"
     ]
+  },
+  {
+    "name": "Vip Lounge",
+    "welcomeMessage": "Welcome our precious VIP member",
+    "NPCs": [],
+    "items" : [],
+    "directions": [
+      "Music Hall",
+      "Stage",
+      "Backstage"
+    ]
   }
 
 ]

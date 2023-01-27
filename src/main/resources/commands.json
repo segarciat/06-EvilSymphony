@@ -1,7 +1,11 @@
 [
   {
-    "name": "Has",
-    "helpText": "Shows the current contents of your inventory."
+    "name": "Help",
+    "helpText": "Lists all valid commands, and describes what they do."
+  },
+  {
+    "name": "Quit",
+    "helpText": "Ends the game."
   },
   {
     "name": "Get ITEM",
@@ -12,20 +16,12 @@
     "helpText": "Moves you to the new direction"
   },
   {
-    "name": "Quit",
-    "helpText": "Ends the game."
-  },
-  {
     "name": "Examine ITEM",
     "helpText": "Provides information about an item."
   },
   {
     "name": "Talk NPC",
     "helpText": "Start a dialog with npc."
-  },
-  {
-    "name": "Restart",
-    "helpText": "Restart game."
   },
   {
     "name": "Fix INSTRUMENT",

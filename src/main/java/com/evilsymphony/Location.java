@@ -1,4 +1,4 @@
-package com.evilsymphony.main;
+package com.evilsymphony;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -14,11 +14,11 @@ import java.util.stream.Collectors;
 
 
 class Location {
-    private String name;
-    private String welcomeMessage;
-    private List<String> NPCs;
-    private List<String> items;
-    private List<String> directions;
+    private final String name;
+    private final String welcomeMessage;
+    private final List<String> NPCs;
+    private final List<String> items;
+    private final List<String> directions;
 
     public Location(String name, String welcomeMessage, List<String> NPCs, List<String> items, List<String> directions) {
         // update later
@@ -87,4 +87,24 @@ class Location {
         return directions;
     }
 
+    public String getDescription() {
+        // Describe the room and what the user can do here.
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("You are in ").append(getName())
+                .append("\n")
+                .append(getWelcomeMessage())
+                .append("\n");
+
+        for (String locationName : directions)
+            sb.append("Go ").append(locationName).append("\n");
+
+        for (String itemName : items)
+            sb.append("examine ").append(itemName).append("\n");
+
+        for (String npc : NPCs)
+            sb.append("talk ").append(npc).append("\n");
+
+        return sb.toString();
+    }
 }

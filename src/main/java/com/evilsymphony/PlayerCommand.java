@@ -1,4 +1,4 @@
-package com.evilsymphony.main;
+package com.evilsymphony;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
