@@ -1,8 +1,8 @@
 [
   {
     "name": "Music Hall",
-    "welcome_message" : "Welcome to the show dont forget to check the info stand",
-    "NPC" : ["Security Guard"],
+    "welcomeMessage": "Welcome to the show dont forget to check the info stand",
+    "NPCs": ["Security Guard"],
     "items" : [],
     "directions": [
       "Info Booth",
@@ -12,9 +12,9 @@
   },
 
   {
-    "name": "Info_Booth",
-    "welcome_message" : "It looks like theres a phone in here too",
-    "NPC" : ["Usher"],
+    "name": "Info Booth",
+    "welcomeMessage": "It looks like theres a phone in here too",
+    "NPCs": ["Usher"],
     "items" : [],
     "directions": [
       "Music Hall"
@@ -23,8 +23,8 @@
 
   {
     "name": "Stage",
-    "welcome_message" : "Wow all of these cool instruments",
-    "NPC" : ["Security Guard"],
+    "welcomeMessage": "Wow all of these cool instruments",
+    "NPCs": ["Security Guard"],
     "items" : [],
     "directions": [
       "Backstage",
@@ -35,8 +35,8 @@
 
   {
     "name": "Backstage",
-    "welcome_message" : "Ive never been back stage is cool",
-    "NPC" : ["Security Guard"],
+    "welcomeMessage": "Ive never been back stage is cool",
+    "NPCs": ["Security Guard"],
     "items" : [],
     "directions": [
       "Backstage",
@@ -50,8 +50,8 @@
 
   {
     "name": "Bathroom",
-    "welcome_message" : "Whats that smell",
-    "NPC" : [],
+    "welcomeMessage": "Whats that smell",
+    "NPCs": [],
     "items" : [],
     "directions": [
       "Stage",
@@ -63,8 +63,8 @@
 
   {
     "name": "Band Dressing Room",
-    "welcome_message" : "Kinda small for 5 people",
-    "NPC" : [],
+    "welcomeMessage": "Kinda small for 5 people",
+    "NPCs": [],
     "items" : [],
     "directions": [
       "Backstage"
@@ -73,8 +73,8 @@
 
   {
     "name": "Friends Dressing Room",
-    "welcome_message" : "Whoa!",
-    "NPC" : [],
+    "welcomeMessage": "Whoa!",
+    "NPCs": [],
     "items" : [],
     "directions": [
       "Backstage"

@@ -1,6 +1,15 @@
 package com.evilsymphony.main;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
+
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Map;
 
 
 class Location {
@@ -19,6 +28,35 @@ class Location {
         this.directions = directions;
     }
 
+    //methods
+
+    public static Map<String,Location> loadLocations(String jsonFile) {
+        // Define the type of the object that will be returned
+        Type locationMapType = new TypeToken<Map<String,Location>>(){}.getType();
+
+        // Create a new instance of GsonBuilder and register a custom deserializer
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(locationMapType,new LocationsDeserializer())
+                .create();
+
+        // Create a null list of Location objects to store the location data
+        Map<String,Location> locations = null;
+
+        try {
+            // Open a JsonReader using the FileReader class, passing the jsonFile as parameter
+            JsonReader reader = new JsonReader(new FileReader(jsonFile));
+
+            // Use the gson object to parse the json data in the jsonFile, using the jsonreader and the locationListType
+            locations = gson.fromJson(reader, locationMapType);
+        } catch (FileNotFoundException ex) {
+            // If the specified jsonFile could not be found, print the stack trace of the exception
+            ex.printStackTrace();
+        }
+
+        // Return the locations, which contains the location data from the JSON file
+        return locations;
+    }
+
 
     // getters and setters
 
@@ -26,39 +64,24 @@ class Location {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public String getWelcome_message() {
         return welcome_message;
     }
 
-    public void setWelcome_message(String welcome_message) {
-        this.welcome_message = welcome_message;
-    }
 
     public List<String> getNPCs() {
         return NPCs;
     }
 
-    public void setNPCs(List<String> NPCs) {
-        this.NPCs = NPCs;
-    }
 
     public List<String> getItems() {
         return items;
     }
 
-    public void setItems(List<String> items) {
-        this.items = items;
-    }
 
     public List<String> getDirections() {
         return directions;
     }
 
-    public void setDirections(List<String> directions) {
-        this.directions = directions;
-    }
 }
