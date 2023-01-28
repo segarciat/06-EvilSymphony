@@ -61,39 +61,30 @@ public class Game {
             // Prompt user for a command
             userInput = parser.promptAndCheckForQuit(
                     currentLocation.getDescription(),
-                    "(?i)(GO|TALK|EXAMINE) ([\\w\\s]+)|help",
+                    "(?i)(GO|TALK|EXAMINE) ([\\w\\s]+)|HELP",
                     Color.RED.setFontColor("Invalid Command. To view list of valid commands, type HELP"))
                     .toUpperCase();
 
             // Parse the command entered by the user.
-            List<String> commandParts = parser.parseCommand(userInput);
+            String[] commandParts = parser.parseCommand(userInput);
+
+            String command = commandParts[0];
+            String noun = commandParts[1];
 
             // Process the command entered by the user.
-            String command = commandParts.get(0);
             if (HELP.equalsIgnoreCase(command)) {
                 displayHelpMenu(commandList);
-            } else if(GO.equalsIgnoreCase(command)) {
-                String destination = commandParts.get(1);
-
-                if (currentLocation.getDirections().contains(destination)){
-                    currentLocation = locations.get(destination);
-                }else {
-                    System.out.println(Color.RED.setFontColor(String.format("%s is invalid\n",destination)));
-                    parser.promptContinue();
-                }
-            } else if (TALK.equalsIgnoreCase(command)) {
-                String npc = commandParts.get(1);
-
-                if (currentLocation.getNPCs().contains(npc)) {
-                    Npc selectedNPC = allNPCs.get(npc);
-                    System.out.println(selectedNPC.getDialog().get("default"));
-                } else {
-                    System.out.println(Color.RED.setFontColor(String.format("%s is invalid\n",npc)));
-                    parser.promptContinue();
-                }
+            } else if(GO.equalsIgnoreCase(command) && currentLocation.getDirections().contains(noun)) {
+                currentLocation = locations.get(noun);
+            } else if (TALK.equalsIgnoreCase(command) && currentLocation.getNPCs().contains(noun)) {
+                Npc selectedNPC = allNPCs.get(noun);
+                System.out.println(selectedNPC.getDialog().get("default"));
             }
-            else if (EXAMINE.equalsIgnoreCase(command)) {
+            else if (EXAMINE.equalsIgnoreCase(command) && currentLocation.getItems().contains(noun)) {
                 System.out.println("Trying to examine an item");
+            } else if (commandList.contains(command)){
+                System.out.println(Color.RED.setFontColor(String.format("%s is invalid\n", noun)));
+                parser.promptContinue();
             }
         }
         handleQuit();
