@@ -11,21 +11,27 @@ class LocationDeserializer implements JsonDeserializer<Location> {
     @Override
     public Location deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
 
-        // Gson object to deserialize the JSON elements to the locationMap
-        Gson gson = new Gson();
-
         // Type object to define the type of the Location class
-
         JsonObject jsonObj = jsonElement.getAsJsonObject();
 
         String name = jsonObj.get("name").getAsString();
         String welcomeMessage = jsonObj.get("welcomeMessage").getAsString();
-        List<String> directions = jsonObj.get("directions").getAsJsonArray().asList().stream().map(JsonElement::getAsString).collect(Collectors.toList());
-        List<String> items = jsonObj.get("items").getAsJsonArray().asList().stream().map(JsonElement::getAsString).collect(Collectors.toList());
-        List<String> npcs = jsonObj.get("NPCs").getAsJsonArray().asList().stream().map(JsonElement::getAsString).collect(Collectors.toList());
+        List<String> directions = jsonStringArrayToList(jsonObj, "directions");
+        List<String> items = jsonStringArrayToList(jsonObj, "items");
+        List<String> NPCs = jsonStringArrayToList(jsonObj, "NPCs");
 
-        Location location = new Location(name,welcomeMessage,npcs,items,directions);
+        return new Location(name, welcomeMessage, NPCs, items, directions);
+    }
 
-        return location;
+    /**
+     *
+     * @param jsonObject Json object containing array
+     * @param arrayKey key for the JsonArray with String objects
+     * @return List of strings corresponding to Strings in JsonArray
+     */
+    private List<String> jsonStringArrayToList(JsonObject jsonObject, String arrayKey) {
+        return jsonObject.get(arrayKey).getAsJsonArray().asList().stream()
+                .map(JsonElement::getAsString)
+                .collect(Collectors.toList());
     }
 }

@@ -34,7 +34,7 @@ public class Game {
         String userInput = parser.promptAndCheckForQuit(
                 "What would you like to do?\nPlay\n",
                 "(?i)(PLAY)",
-                "\nInvalid Command. Please enter Play or Quit\n")
+                Color.RED.setFontColor("\nInvalid Command. Please enter Play or Quit\n"))
                 .toUpperCase();
 
         if (userInput.equals(TextParser.QUIT)) {
@@ -50,7 +50,7 @@ public class Game {
     private void startGame() {
 
         Map<String, Location> locations = Location.loadLocations(LOCATION_FILE);
-        Map<String, Npc> allNPCs = Npc.loadNpcs(NPC_FILE);
+        Map<String, NPC> allNPCs = NPC.loadNpcs(NPC_FILE);
         List<PlayerCommand> commandList = PlayerCommand.loadCommands(COMMAND_FILE);
 
         Location currentLocation = locations.get(STARTING_LOCATION);
@@ -77,12 +77,12 @@ public class Game {
             } else if(GO.equalsIgnoreCase(command) && currentLocation.getDirections().contains(noun)) {
                 currentLocation = locations.get(noun);
             } else if (TALK.equalsIgnoreCase(command) && currentLocation.getNPCs().contains(noun)) {
-                Npc selectedNPC = allNPCs.get(noun);
+                NPC selectedNPC = allNPCs.get(noun);
                 System.out.println(selectedNPC.getDialog().get("default"));
             }
             else if (EXAMINE.equalsIgnoreCase(command) && currentLocation.getItems().contains(noun)) {
                 System.out.println("Trying to examine an item");
-            } else if (commandList.contains(command)){
+            } else if (commandList.stream().noneMatch(cmd -> cmd.getName().equalsIgnoreCase(command))){
                 System.out.println(Color.RED.setFontColor(String.format("%s is invalid\n", noun)));
                 parser.promptContinue();
             }

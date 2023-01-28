@@ -10,25 +10,25 @@ import java.io.FileReader;
 import java.lang.reflect.Type;
 import java.util.Map;
 
-public class Npc {
+public class NPC {
     private String name;
     private final Map<String, String> dialog;
 
-    public Npc(String name, Map<String, String> dialog) {
+    public NPC(String name, Map<String, String> dialog) {
         this.name = name;
         this.dialog = dialog;
     }
 
-    public static Map<String, Npc> loadNpcs(String jsonFile) {
+    public static Map<String, NPC> loadNpcs(String jsonFile) {
         // Define the type of the object that will be returned
-        Type npcMapType = new TypeToken<Map<String, Npc>>(){}.getType();
+        Type npcMapType = new TypeToken<Map<String, NPC>>(){}.getType();
 
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(npcMapType, new NPCDeserializer())
                 .create();
 
         // Create an empty map of Npc objects to store the NPC data
-        Map<String, Npc> npcMap = null;
+        Map<String, NPC> npcMap = null;
 
         try {
             // Open a JsonReader using the FileReader class, passing the jsonFile as parameter

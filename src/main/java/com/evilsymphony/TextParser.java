@@ -42,10 +42,13 @@ public class TextParser {
         }
     }
 
+    /**
+     * Force player to press C before continuing.
+     */
     public void promptContinue() {
-        System.out.println("Press c to continue game");
-        while (!scanner.nextLine().equalsIgnoreCase("C"))
-            ;
+        do {
+            System.out.println("Press C to continue game");
+        } while (!scanner.nextLine().equalsIgnoreCase("C"));
     }
 
     /**
@@ -57,6 +60,9 @@ public class TextParser {
         return prompt(message, regex, helpText);
     }
 
+    /**
+     * Converts the user input into a two-part command array.
+     */
     public String[] parseCommand(String userInput) {
         String[] inputArray = userInput.split(" ", 2);
 
