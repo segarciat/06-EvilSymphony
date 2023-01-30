@@ -7,11 +7,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-class NPCDeserializer implements JsonDeserializer<Map<String, Npc>> {
+class NPCDeserializer implements JsonDeserializer<Map<String, NPC>> {
     @Override
-    public Map<String, Npc> deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+    public Map<String, NPC> deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
 
-        Map<String, Npc> npcMap = new HashMap<>();
+        Map<String, NPC> npcMap = new HashMap<>();
 
         for (JsonElement element : jsonElement.getAsJsonArray()) {
             // Get the JSON object for each location element in the array
@@ -28,7 +28,7 @@ class NPCDeserializer implements JsonDeserializer<Map<String, Npc>> {
                     ));
 
             // List<String> actions = npcJsonObject.get("actions").getAsJsonArray().asList()
-            npcMap.put(npcName.toUpperCase(), new Npc(npcName, dialogMap));
+            npcMap.put(npcName.toUpperCase(), new NPC(npcName, dialogMap));
         }
         return npcMap;
     }

@@ -3,9 +3,6 @@ package com.evilsymphony;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Scanner;
 
 public class TextParser {
@@ -45,10 +42,13 @@ public class TextParser {
         }
     }
 
+    /**
+     * Force player to press C before continuing.
+     */
     public void promptContinue() {
-        System.out.println("Press c to continue game");
-        while (!scanner.nextLine().equalsIgnoreCase("C"))
-            ;
+        do {
+            System.out.println("Press C to continue game");
+        } while (!scanner.nextLine().equalsIgnoreCase("C"));
     }
 
     /**
@@ -60,27 +60,15 @@ public class TextParser {
         return prompt(message, regex, helpText);
     }
 
+    /**
+     * Converts the user input into a two-part command array.
+     */
+    public String[] parseCommand(String userInput) {
+        String[] inputArray = userInput.split(" ", 2);
 
-
-    public List<String> parseCommand(String userInput) {
-        String[] inputArray = userInput.split(" ");
-        ArrayList<String> commandParts = new ArrayList<>();
-        String command = inputArray[0];
-        commandParts.add(command);
-
-        if (!"help".equalsIgnoreCase(command) && !"quit".equalsIgnoreCase(command)) {
-
-            //        String location = String.join("",inputArray);
-            //        String location = userInput.substring(command.length());
-
-            String[] afterCommandArray = Arrays.copyOfRange(inputArray, 1, inputArray.length);
-
-            String afterCommandString = String.join(" ",afterCommandArray);
-
-            commandParts.add(afterCommandString);
-
-        }
-
-        return commandParts;
+        if (inputArray.length == 1)
+            return new String[]{userInput, ""};
+        else
+            return inputArray;
     }
 }

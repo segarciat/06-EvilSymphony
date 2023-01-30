@@ -24,68 +24,13 @@ class Location {
         // update later
         this.name = name;
         this.welcomeMessage = welcomeMessage;
-        this.NPCs = NPCs.stream().map(String::toUpperCase).collect(Collectors.toList());
-        this.items = items.stream().map(String::toUpperCase).collect(Collectors.toList());
-        this.directions = directions.stream().map(String::toUpperCase).collect(Collectors.toList());
+        this.NPCs = toUpperStrings(NPCs);
+        this.items = toUpperStrings(items);
+        this.directions = toUpperStrings(directions);
 
     }
 
-    //methods
-
-    public static Map<String,Location> loadLocations(String jsonFile) {
-        // Define the type of the object that will be returned
-        Type locationMapType = new TypeToken<Map<String,Location>>(){}.getType();
-        Type locationType = new TypeToken<Location>(){}.getType();
-
-        // Create a new instance of GsonBuilder and register a custom deserializer
-        Gson gson = new GsonBuilder()
-                .registerTypeAdapter(locationMapType,new LocationsMapDeserializer())
-                .create();
-
-        // Create a null list of Location objects to store the location data
-        Map<String,Location> locations = null;
-
-        try {
-            // Open a JsonReader using the FileReader class, passing the jsonFile as parameter
-            JsonReader reader = new JsonReader(new FileReader(jsonFile));
-
-            // Use the gson object to parse the json data in the jsonFile, using the jsonreader and the locationListType
-            locations = gson.fromJson(reader, locationMapType);
-        } catch (FileNotFoundException ex) {
-            // If the specified jsonFile could not be found, print the stack trace of the exception
-            ex.printStackTrace();
-        }
-
-        // Return the locations, which contains the location data from the JSON file
-        return locations;
-    }
-
-
-    // getters and setters
-
-    public String getName() {
-        return name;
-    }
-
-
-    public String getWelcomeMessage() {
-        return welcomeMessage;
-    }
-
-
-    public List<String> getNPCs() {
-        return NPCs;
-    }
-
-
-    public List<String> getItems() {
-        return items;
-    }
-
-
-    public List<String> getDirections() {
-        return directions;
-    }
+    // business methods
 
     public String getDescription() {
         // Describe the room and what the user can do here.
@@ -106,5 +51,57 @@ class Location {
             sb.append("talk ").append(npc).append("\n");
 
         return sb.toString();
+    }
+
+    private static List<String> toUpperStrings(List<String> strings) {
+        return strings.stream().map(String::toUpperCase).collect(Collectors.toList());
+    }
+
+    public static Map<String,Location> loadLocations(String jsonFile) {
+        // Define the type of the object that will be returned
+        Type locationMapType = new TypeToken<Map<String,Location>>(){}.getType();
+
+        // Create a new instance of GsonBuilder and register a custom deserializer
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(locationMapType,new LocationsMapDeserializer())
+                .create();
+
+        // Create a null list of Location objects to store the location data
+        Map<String,Location> locations = null;
+
+        try {
+            // Open a JsonReader using the FileReader class, passing the jsonFile as parameter
+            JsonReader reader = new JsonReader(new FileReader(jsonFile));
+
+            // Use the gson object to parse the json data in the jsonFile, using the json reader and the locationListType
+            locations = gson.fromJson(reader, locationMapType);
+        } catch (FileNotFoundException ex) {
+            // If the specified jsonFile could not be found, print the stack trace of the exception
+            ex.printStackTrace();
+        }
+
+        // Return the locations, which contains the location data from the JSON file
+        return locations;
+    }
+
+    // getters and setters
+    public String getName() {
+        return name;
+    }
+
+    public String getWelcomeMessage() {
+        return welcomeMessage;
+    }
+
+    public List<String> getNPCs() {
+        return NPCs;
+    }
+
+    public List<String> getItems() {
+        return items;
+    }
+
+    public List<String> getDirections() {
+        return directions;
     }
 }
