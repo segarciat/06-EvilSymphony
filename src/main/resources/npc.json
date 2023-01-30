@@ -1,51 +1,35 @@
 [
   {
-    "name": "Rocky",
+    "name": "Eager Fan Rocky",
+    "questItem": "Autograph",
+    "items": ["Guitar Pedal"],
     "dialog": {
       "default": "aint go lie",
       "withVocab": "baby",
       "itemFound": "bye bye bye"
     }
   },
-
   {
-    "name": "Jay",
+    "name": "Rockstar Suzy",
+    "items":  ["Autograph"],
     "dialog": {
       "default": "aint go lie",
       "withVocab": "baby",
       "itemFound": "bye bye bye"
     }
   },
-
   {
-    "name": "Suzy",
+    "name": "Larry the Drummer",
+    "items": ["Drum Sticks"],
     "dialog": {
       "default": "aint go lie",
       "withVocab": "baby",
       "itemFound": "bye bye bye"
     }
   },
-
-  {
-    "name": "Larry",
-    "dialog": {
-      "default": "aint go lie",
-      "withVocab": "baby",
-      "itemFound": "bye bye bye"
-    }
-  },
-
-  {
-    "name": "Diana",
-    "dialog": {
-      "default": "aint go lie",
-      "withVocab": "baby",
-      "itemFound": "bye bye bye"
-    }
-  },
-
   {
     "name": "Friend",
+    "items": ["Door Key", "VIP Ticket"],
     "dialog": {
       "default": "aint go lie",
       "withVocab": "baby",
@@ -55,6 +39,7 @@
 
   {
     "name": "Johnny The Bartender",
+    "items": ["Saxophone Reed"],
     "dialog": {
       "default": "aint go lie",
       "withVocab": "baby",
@@ -64,24 +49,15 @@
 
   {
     "name": "Security Guard",
+    "questItem": "VIP Ticket",
     "dialog": {
       "default": "aint go lie",
       "withVocab": "baby",
       "itemFound": "bye bye bye"
     }
   },
-
   {
-    "name": "Diva",
-    "dialog": {
-      "default": "aint go lie",
-      "withVocab": "baby",
-      "itemFound": "bye bye bye"
-    }
-  },
-
-  {
-    "name": "Usher",
+    "name": "Director",
     "dialog": {
       "default": "aint go lie",
       "withVocab": "baby",
