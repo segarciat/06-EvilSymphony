@@ -4,27 +4,24 @@
     "questItem": "Autograph",
     "items": ["Guitar Pedal"],
     "dialog": {
-      "default": "aint go lie",
-      "withVocab": "baby",
-      "itemFound": "bye bye bye"
+      "prequest": "I'm so shy... hey, would you get Suzy's autograph for me? I'll give you something good.",
+      "postquest": "Thank you so much for the the autograph! Hope the pedal comes in handy!"
     }
   },
   {
     "name": "Rockstar Suzy",
     "items":  ["Autograph"],
     "dialog": {
-      "default": "aint go lie",
-      "withVocab": "baby",
-      "itemFound": "bye bye bye"
+      "prequest": "An autograph? Anything for a fan.",
+      "postquest": "Sorry, I've already given you an autograph. I'm a little busy now."
     }
   },
   {
     "name": "Larry the Drummer",
     "items": ["Drum Sticks"],
     "dialog": {
-      "default": "aint go lie",
-      "withVocab": "baby",
-      "itemFound": "bye bye bye"
+      "prequest": "You want my drum sticks? Eh, these are my special ones. Here's some spares I have.",
+      "postquest": ""
     }
   },
   {
