@@ -5,10 +5,10 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
 import java.lang.reflect.Type;
 import java.util.Map;
+import java.util.Objects;
 
 public class NPC {
     private String name;
@@ -21,28 +21,19 @@ public class NPC {
 
     public static Map<String, NPC> loadNpcs(String jsonFile) {
         // Define the type of the object that will be returned
-        Type npcMapType = new TypeToken<Map<String, NPC>>(){}.getType();
 
-        Gson gson = new GsonBuilder()
-                .registerTypeAdapter(npcMapType, new NPCDeserializer())
-                .create();
 
-        // Create an empty map of Npc objects to store the NPC data
-        Map<String, NPC> npcMap = null;
 
-        try {
-            // Open a JsonReader using the FileReader class, passing the jsonFile as parameter
-            JsonReader reader = new JsonReader(new FileReader(jsonFile));
-
-            // Use the gson object to parse the json data in the jsonFile, using the jsonreader and the npcListType
-            npcMap = gson.fromJson(reader, npcMapType);
-        } catch (FileNotFoundException ex) {
-            // If the specified jsonFile could not be found, print the stack trace of the exception
-            ex.printStackTrace();
+        try (Reader reader = new InputStreamReader(Objects.requireNonNull(NPC.class.getClassLoader().getResourceAsStream(jsonFile)))) {
+            Type npcMapType = new TypeToken<Map<String, NPC>>() {
+            }.getType();
+            Gson gson = new GsonBuilder()
+                    .registerTypeAdapter(npcMapType, new NPCDeserializer())
+                    .create();
+            return gson.fromJson(reader, npcMapType);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-
-        // Return the npcMap, which contains the NPC data from the JSON file
-        return npcMap;
     }
 
     // getters and setters

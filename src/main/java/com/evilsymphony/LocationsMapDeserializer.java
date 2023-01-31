@@ -21,9 +21,9 @@ class LocationsMapDeserializer implements JsonDeserializer<Map<String, Location>
         Map <String,Location> locationMap = new HashMap<String,Location>();
 
         // Gson object to deserialize the JSON elements to the locationMap
-        Gson gson = new GsonBuilder().
-                registerTypeAdapter(locationType, new LocationDeserializer())
-                .create();
+        Gson gson = new Gson();
+//                registerTypeAdapter(locationType, new LocationDeserializer())
+//                .create();
 
         // Iterate through the JSON array
         for (JsonElement element : jsonElement.getAsJsonArray()){

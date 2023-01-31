@@ -5,11 +5,12 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 
@@ -24,9 +25,9 @@ class Location {
         // update later
         this.name = name;
         this.welcomeMessage = welcomeMessage;
-        this.NPCs = toUpperStrings(NPCs);
-        this.items = toUpperStrings(items);
-        this.directions = toUpperStrings(directions);
+        this.NPCs = NPCs;
+        this.items = items;
+        this.directions = directions;
 
     }
 
@@ -53,35 +54,30 @@ class Location {
         return sb.toString();
     }
 
-    private static List<String> toUpperStrings(List<String> strings) {
-        return strings.stream().map(String::toUpperCase).collect(Collectors.toList());
-    }
+//    private static List<String> toUpperStrings(List<String> strings) {
+//        return strings.stream().map(String::toUpperCase).collect(Collectors.toList());
+//    }
 
     public static Map<String,Location> loadLocations(String jsonFile) {
         // Define the type of the object that will be returned
-        Type locationMapType = new TypeToken<Map<String,Location>>(){}.getType();
+
 
         // Create a new instance of GsonBuilder and register a custom deserializer
-        Gson gson = new GsonBuilder()
-                .registerTypeAdapter(locationMapType,new LocationsMapDeserializer())
-                .create();
+
 
         // Create a null list of Location objects to store the location data
-        Map<String,Location> locations = null;
 
-        try {
-            // Open a JsonReader using the FileReader class, passing the jsonFile as parameter
-            JsonReader reader = new JsonReader(new FileReader(jsonFile));
 
-            // Use the gson object to parse the json data in the jsonFile, using the json reader and the locationListType
-            locations = gson.fromJson(reader, locationMapType);
-        } catch (FileNotFoundException ex) {
-            // If the specified jsonFile could not be found, print the stack trace of the exception
-            ex.printStackTrace();
+        try(Reader reader = new InputStreamReader(Objects.requireNonNull(Location.class.getClassLoader().getResourceAsStream(jsonFile)))){
+            Type locationMapType = new TypeToken<Map<String,Location>>(){}.getType();
+            Gson gson = new GsonBuilder()
+                    .registerTypeAdapter(locationMapType,new LocationsMapDeserializer())
+                    .create();
+            return gson.fromJson(reader,locationMapType);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
 
-        // Return the locations, which contains the location data from the JSON file
-        return locations;
     }
 
     // getters and setters
@@ -103,5 +99,14 @@ class Location {
 
     public List<String> getDirections() {
         return directions;
+    }
+
+    public boolean containsLocation(String noun) {
+        for(String location : directions) {
+            if (location.equalsIgnoreCase(noun)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
