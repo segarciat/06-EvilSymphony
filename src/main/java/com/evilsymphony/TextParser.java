@@ -1,9 +1,14 @@
 package com.evilsymphony;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Scanner;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class TextParser {
     public static final String QUIT = "QUIT";
@@ -14,13 +19,40 @@ public class TextParser {
      */
     public String loadText(String filename) {
 
-        String text = "";
-        try {
-            text = Files.readString(Path.of(filename));
-        } catch(IOException e) {
-            e.printStackTrace();
+        // Use try-with-resources block to automatically close resources
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream(filename)))) {
+
+            // Get the line separator to account for os defaults
+            String separator = System.lineSeparator();
+
+            // Generate a stream of lines from the file
+            return Stream.generate(()->{
+
+                        // Read the next line from the file
+                        try {
+                            return reader.readLine();
+                        } catch (IOException e) {
+                            // Throw a runtime exception if there's an IOException while reading the file
+                            throw new RuntimeException(e);
+                        }
+                    })
+                    // Continue reading the file while there's still more lines
+                    .takeWhile((line) -> line != null)
+                    // Join the lines into a single string separated by the line separator
+                    .collect(Collectors.joining(separator));
+        } catch (IOException e) {
+            // Throw a runtime exception if there's an IOException while opening the file
+            throw new RuntimeException(e);
         }
-        return text;
+
+
+//        String text = "";
+//        try {
+//            text = Files.readString(Path.of(filename));
+//        } catch(IOException e) {
+//            e.printStackTrace();
+//        }
+//        return text;
     }
 
     /**

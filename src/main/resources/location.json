@@ -39,7 +39,6 @@
     "NPCs": ["Security Guard"],
     "items" : [],
     "directions": [
-      "Backstage",
       "Vip Lounge",
       "Bathroom",
       "Bar",

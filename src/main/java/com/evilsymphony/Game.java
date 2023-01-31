@@ -3,12 +3,12 @@ package com.evilsymphony;
 import java.util.*;
 
 public class Game {
-    private static final String GAME_SUMMARY_FILE = "src/main/resources/game_summary.txt";
-    private static final String SPLASH_FILE = "src/main/resources/splash.txt";
+    private static final String GAME_SUMMARY_FILE = "game_summary.txt";
+    private static final String SPLASH_FILE = "splash.txt";
 
-    private static final String LOCATION_FILE = "src/main/resources/location.json";
-    private static final String NPC_FILE = "src/main/resources/npc.json";
-    private static final String COMMAND_FILE = "src/main/resources/commands.json";
+    private static final String LOCATION_FILE = "location.json";
+    private static final String NPC_FILE = "npc.json";
+    private static final String COMMAND_FILE = "commands.json";
 
     private static final String STARTING_LOCATION = "MUSIC HALL";
 
@@ -48,7 +48,7 @@ public class Game {
      * Initializes main game loop.
      */
     private void startGame() {
-
+        
         Map<String, Location> locations = Location.loadLocations(LOCATION_FILE);
         Map<String, NPC> allNPCs = NPC.loadNpcs(NPC_FILE);
         List<PlayerCommand> commandList = PlayerCommand.loadCommands(COMMAND_FILE);
@@ -74,7 +74,7 @@ public class Game {
             // Process the command entered by the user.
             if (HELP.equalsIgnoreCase(command)) {
                 displayHelpMenu(commandList);
-            } else if(GO.equalsIgnoreCase(command) && currentLocation.getDirections().contains(noun)) {
+            } else if(GO.equalsIgnoreCase(command) && currentLocation.containsLocation(noun)) {
                 currentLocation = locations.get(noun);
             } else if (TALK.equalsIgnoreCase(command) && currentLocation.getNPCs().contains(noun)) {
                 NPC selectedNPC = allNPCs.get(noun);
@@ -105,4 +105,18 @@ public class Game {
     private void handleQuit() {
         System.out.println("Thanks for playing!");
     }
+
+    public <T> boolean containsChoiceCaseInsensitive(String key, Map<String,T> map) {
+        return map.keySet().stream().anyMatch(k -> k.equalsIgnoreCase(key));
+    }
+
+    public <T> T getValueCaseInsensitive(String key, Map<String,T> map){
+        return map.entrySet().stream()
+                .filter(e -> e.getKey().equalsIgnoreCase(key))
+                .map(e -> e.getValue()).findFirst()
+                .orElse(null);
+
+
+    }
+
 }
