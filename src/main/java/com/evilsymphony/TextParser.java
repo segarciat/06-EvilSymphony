@@ -1,9 +1,14 @@
 package com.evilsymphony;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Scanner;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class TextParser {
     public static final String QUIT = "QUIT";
@@ -14,13 +19,29 @@ public class TextParser {
      */
     public String loadText(String filename) {
 
-        String text = "";
-        try {
-            text = Files.readString(Path.of(filename));
-        } catch(IOException e) {
-            e.printStackTrace();
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream(filename)))) {
+            String separator = System.lineSeparator();
+            return Stream.generate(()->{
+
+                try {
+                    return reader.readLine();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            })
+                    .takeWhile((line) -> line != null)
+                    .collect(Collectors.joining(separator));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        return text;
+
+//        String text = "";
+//        try {
+//            text = Files.readString(Path.of(filename));
+//        } catch(IOException e) {
+//            e.printStackTrace();
+//        }
+//        return text;
     }
 
     /**

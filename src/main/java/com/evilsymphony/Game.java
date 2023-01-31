@@ -3,12 +3,12 @@ package com.evilsymphony;
 import java.util.*;
 
 public class Game {
-    private static final String GAME_SUMMARY_FILE = "src/main/resources/game_summary.txt";
-    private static final String SPLASH_FILE = "src/main/resources/splash.txt";
+    private static final String GAME_SUMMARY_FILE = "game_summary.txt";
+    private static final String SPLASH_FILE = "splash.txt";
 
-    private static final String LOCATION_FILE = "src/main/resources/location.json";
-    private static final String NPC_FILE = "src/main/resources/npc.json";
-    private static final String COMMAND_FILE = "src/main/resources/commands.json";
+    private static final String LOCATION_FILE = "location.json";
+    private static final String NPC_FILE = "npc.json";
+    private static final String COMMAND_FILE = "commands.json";
 
     private static final String STARTING_LOCATION = "MUSIC HALL";
 
@@ -48,6 +48,7 @@ public class Game {
      * Initializes main game loop.
      */
     private void startGame() {
+        List<Location> locationsTest = new LocationDeserializer().loadLocations(LOCATION_FILE);
 
         Map<String, Location> locations = Location.loadLocations(LOCATION_FILE);
         Map<String, NPC> allNPCs = NPC.loadNpcs(NPC_FILE);
