@@ -136,8 +136,10 @@ public class Game {
                 //  cls: clear screen
                 // for more information, from a command prompt, type cmd /?
                 new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-            else
-                Runtime.getRuntime().exec("clear");
+            else {
+                System.out.print("\033[H\033[2J");
+                System.out.flush();
+            }
     }
 
 }
