@@ -7,9 +7,10 @@ import java.util.*;
 public class Game {
     private static final String GAME_SUMMARY_FILE = "game_summary.txt";
     private static final String SPLASH_FILE = "splash.txt";
-
+    private static final String MAP_FILE = "Map.txt";
     private static final String LOCATION_FILE = "location.json";
     private static final String NPC_FILE = "npc.json";
+
     private static final String STARTING_LOCATION = "MUSIC HALL";
 
 
@@ -18,6 +19,11 @@ public class Game {
 
 
     private final TextParser parser = new TextParser();
+    private  final String MAP_LAYOUT ;
+
+    public Game() {
+        MAP_LAYOUT = parser.loadText(MAP_FILE);
+    }
 
     /**
      * Starting point of the application.
@@ -100,44 +106,7 @@ public class Game {
 
     private void displayMap() {
 
-        System.out.println("###############################################################################");
-        System.out.println("##                             ##                       ##                   ##");
-        System.out.println("##      Dressing               ##       Dressing        ##    Friends        ##");
-        System.out.println("##      Room                   ##       Room            ##    Dressing       ##");
-        System.out.println("##                             ##                       ##    Room           ##");
-        System.out.println("##                             ##                       ##                   ##");
-        System.out.println("###################  #####################  ########################  #########");
-        System.out.println("##         ##                                                                ##");
-        System.out.println("##         ##                                                                ##");
-        System.out.println("##  Snack                                                                    ##");
-        System.out.println("##  Bar    ##                                                                ##");
-        System.out.println("##         ##                                                                ##");
-        System.out.println("####  #######               Backstage                                        ##");
-        System.out.println("##         ##                                                                ##");
-        System.out.println("##  Bath                                                                     ##");
-        System.out.println("##  Room   ##                                                                ##");
-        System.out.println("##         ##                                                                ##");
-        System.out.println("####  #########  #########################################  ###################");
-        System.out.println("##                                              ##                           ##");
-        System.out.println("##                                              ##                           ##");
-        System.out.println("##                   Stage                            VIP Area               ##");
-        System.out.println("##                                              ##                           ##");
-        System.out.println("##                                              ##                           ##");
-        System.out.println("##                                              ##                           ##");
-        System.out.println("#############  ####################################  ##########################");
-        System.out.println("##                                                            ##             ##");
-        System.out.println("##                                                            ##             ##");
-        System.out.println("##                  Music Hall                                ##  Info       ##");
-        System.out.println("##                                                                Booth      ##");
-        System.out.println("##                                                            ##             ##");
-        System.out.println("##                                                            ##             ##");
-        System.out.println("###############################  ##############################################");
-        System.out.println("                    ##                 ##");
-        System.out.println("                    ##                 ##");
-        System.out.println("                    ##      ENTER      ##");
-        System.out.println("                    ##                 ##");
-        System.out.println("                    ##                 ##");
-        System.out.println("                    #####################");
+        System.out.println(MAP_LAYOUT);
     }
 
     /**
