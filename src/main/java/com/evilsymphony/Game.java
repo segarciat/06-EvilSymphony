@@ -87,7 +87,7 @@ public class Game {
             if (PlayerCommand.HELP.toString().equalsIgnoreCase(command)) {
                 System.out.println(PlayerCommand.getHelpMenu());
             } else if (PlayerCommand.MAP.toString().equalsIgnoreCase(command)){
-                displayMap();
+                displayMap(currentLocation);
             } else if (PlayerCommand.GO.toString().equalsIgnoreCase(command) && currentLocation.containsLocation(noun)) {
                 currentLocation = locations.get(noun);
                 System.out.println(currentLocation.getDescription());
@@ -104,9 +104,10 @@ public class Game {
         handleQuit();
     }
 
-    private void displayMap() {
-
+    private void displayMap(Location currentLocation) {
+        String s = String.format("You are in: %s%s",currentLocation.getName(), System.lineSeparator());
         System.out.println(MAP_LAYOUT);
+        System.out.println(Color.GREEN.setFontColor(s));
     }
 
     /**
