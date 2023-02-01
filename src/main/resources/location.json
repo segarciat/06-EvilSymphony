@@ -36,7 +36,7 @@
   {
     "name": "Backstage",
     "welcomeMessage": "Ive never been back stage is cool",
-    "NPCs": ["Security Guard"],
+    "NPCs": ["Security Guard","Rocky"],
     "items" : [],
     "directions": [
       "Vip Lounge",
