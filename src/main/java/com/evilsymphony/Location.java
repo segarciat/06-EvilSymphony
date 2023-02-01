@@ -58,7 +58,7 @@ class Location {
 //        return strings.stream().map(String::toUpperCase).collect(Collectors.toList());
 //    }
 
-    public static Map<String,Location> loadLocations(String jsonFile) {
+    public static Map<String, Location> loadLocations(String jsonFile) {
         // Define the type of the object that will be returned
 
 
@@ -68,12 +68,13 @@ class Location {
         // Create a null list of Location objects to store the location data
 
 
-        try(Reader reader = new InputStreamReader(Objects.requireNonNull(Location.class.getClassLoader().getResourceAsStream(jsonFile)))){
-            Type locationMapType = new TypeToken<Map<String,Location>>(){}.getType();
+        try (Reader reader = new InputStreamReader(Objects.requireNonNull(Location.class.getClassLoader().getResourceAsStream(jsonFile)))) {
+            Type locationMapType = new TypeToken<Map<String, Location>>() {
+            }.getType();
             Gson gson = new GsonBuilder()
-                    .registerTypeAdapter(locationMapType,new LocationsMapDeserializer())
+                    .registerTypeAdapter(locationMapType, new LocationsMapDeserializer())
                     .create();
-            return gson.fromJson(reader,locationMapType);
+            return gson.fromJson(reader, locationMapType);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -102,8 +103,16 @@ class Location {
     }
 
     public boolean containsLocation(String noun) {
-        for(String location : directions) {
-            if (location.equalsIgnoreCase(noun)) {
+        return containsNounCaseInsensitive(directions, noun);
+    }
+
+    public boolean containsNpc(String noun) {
+        return containsNounCaseInsensitive(NPCs, noun);
+    }
+
+    private boolean containsNounCaseInsensitive(List<String> list, String searchKey) {
+        for (String noun : list) {
+            if (noun.equalsIgnoreCase(searchKey)) {
                 return true;
             }
         }

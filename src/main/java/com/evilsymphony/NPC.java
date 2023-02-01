@@ -14,10 +14,12 @@ import java.util.stream.Collectors;
 public class NPC {
     private final String name;
     private final List<String> dialogue;
+    private final Map<String,Map<String,String>> items;
 
-    public NPC(String name,  List<String> dialogue) {
+    public NPC(String name, List<String> dialogue, Map<String, Map<String, String>> items) {
         this.name = name;
         this.dialogue = dialogue;
+        this.items = items;
     }
 
     public static Map<String, NPC> loadNPCs(String jsonFile) {
@@ -38,6 +40,8 @@ public class NPC {
     }
 
     public  List<String> getDialogue() {
+        System.out.println(items);
         return dialogue;
+
     }
 }

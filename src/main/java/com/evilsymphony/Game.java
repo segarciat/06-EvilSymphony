@@ -79,7 +79,7 @@ public class Game {
                 displayHelpMenu(commandList);
             } else if (GO.equalsIgnoreCase(command) && currentLocation.containsLocation(noun)) {
                 currentLocation = locations.get(noun);
-            } else if (TALK.equalsIgnoreCase(command) && currentLocation.getNPCs().contains(noun)) {
+            } else if (TALK.equalsIgnoreCase(command) && currentLocation.containsNpc(noun)) {
                 NPC selectedNPC = allNPCs.get(noun);
                 System.out.println(selectedNPC.getDialogue());
             } else if (EXAMINE.equalsIgnoreCase(command) && currentLocation.getItems().contains(noun)) {
