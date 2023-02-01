@@ -1,19 +1,17 @@
 package com.evilsymphony;
 
 public enum PlayerCommand {
-    GO("Go LOCATION", "Changes your room"),
+    GO("GO LOCATION", "Changes your room"),
     HELP("HELP", "Lists all valid commands, and describes what they do."),
-    QUIT("Quit", "Ends the game."),
-    GET("Get ITEM", "Takes an item and places it into your inventory."),
-    EXAMINE("Examine ITEM", "Provides information about an item."),
-    TALK("Talk NPC", "Start a dialog with npc."),
-    FIX("Fix INSTRUMENT", "Repair an item."),
-    REPLACE("Replace ITEM", "Swap with existing item."),
-    TRADE("Trade ITEM", "Trade an item with an NPC."),
-    LOOk("Look ITEM", "Examine an item to get more information"),
-    SAVE("Save GAME", "Save the current game."),
-    RESTORE("Restore GAME", "Restores a saved game."),
-    PLAY("Play", "Start the game.");
+    QUIT("QUIT", "Ends the game."),
+    GET("GET ITEM", "Takes an item and places it into your inventory."),
+    EXAMINE("EXAMINE ITEM", "Provides information about an item."),
+    TALK("TALK NPC", "Start a dialog with npc."),
+    REPLACE("REPLACE ITEM", "Swap with existing item."),
+    TRADE("TRADE ITEM", "Trade an item with an NPC."),
+    LOOK("LOOK ITEM", "Examine an item to get more information"),
+    PLAY("PLAY", "Start the game."),
+    MAP("MAP", "Displays the current map");
 
     private final String format;
     private final String helpText;

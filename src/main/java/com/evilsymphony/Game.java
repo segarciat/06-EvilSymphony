@@ -74,6 +74,8 @@ public class Game {
             // Process the command entered by the user.
             if (PlayerCommand.HELP.toString().equalsIgnoreCase(command)) {
                 System.out.println(PlayerCommand.getHelpMenu());
+            } else if (PlayerCommand.MAP.toString().equalsIgnoreCase(command)){
+                displayMap();
             } else if (PlayerCommand.GO.toString().equalsIgnoreCase(command) && currentLocation.containsLocation(noun)) {
                 currentLocation = locations.get(noun);
             } else if (PlayerCommand.TALK.toString().equalsIgnoreCase(command) && currentLocation.containsNpc(noun)) {
@@ -87,6 +89,48 @@ public class Game {
             }
         }
         handleQuit();
+    }
+
+    private void displayMap() {
+
+        System.out.println("###############################################################################");
+        System.out.println("##                             ##                       ##                   ##");
+        System.out.println("##      Dressing               ##       Dressing        ##    Friends        ##");
+        System.out.println("##      Room                   ##       Room            ##    Dressing       ##");
+        System.out.println("##                             ##                       ##    Room           ##");
+        System.out.println("##                             ##                       ##                   ##");
+        System.out.println("###################  #####################  ########################  #########");
+        System.out.println("##         ##                                                                ##");
+        System.out.println("##         ##                                                                ##");
+        System.out.println("##  Snack                                                                    ##");
+        System.out.println("##  Bar    ##                                                                ##");
+        System.out.println("##         ##                                                                ##");
+        System.out.println("####  #######               Backstage                                        ##");
+        System.out.println("##         ##                                                                ##");
+        System.out.println("##  Bath                                                                     ##");
+        System.out.println("##  Room   ##                                                                ##");
+        System.out.println("##         ##                                                                ##");
+        System.out.println("####  #########  #########################################  ###################");
+        System.out.println("##                                              ##                           ##");
+        System.out.println("##                                              ##                           ##");
+        System.out.println("##                   Stage                            VIP Area               ##");
+        System.out.println("##                                              ##                           ##");
+        System.out.println("##                                              ##                           ##");
+        System.out.println("##                                              ##                           ##");
+        System.out.println("#############  ####################################  ##########################");
+        System.out.println("##                                                            ##             ##");
+        System.out.println("##                                                            ##             ##");
+        System.out.println("##                  Music Hall                                ##  Info       ##");
+        System.out.println("##                                                                Booth      ##");
+        System.out.println("##                                                            ##             ##");
+        System.out.println("##                                                            ##             ##");
+        System.out.println("###############################  ##############################################");
+        System.out.println("                    ##                 ##");
+        System.out.println("                    ##                 ##");
+        System.out.println("                    ##      ENTER      ##");
+        System.out.println("                    ##                 ##");
+        System.out.println("                    ##                 ##");
+        System.out.println("                    #####################");
     }
 
     /**
