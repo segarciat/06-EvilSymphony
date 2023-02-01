@@ -2,6 +2,8 @@ package com.evilsymphony;
 
 import java.util.*;
 
+
+
 public class Game {
     private static final String GAME_SUMMARY_FILE = "game_summary.txt";
     private static final String SPLASH_FILE = "splash.txt";
@@ -9,6 +11,7 @@ public class Game {
     private static final String LOCATION_FILE = "location.json";
     private static final String NPC_FILE = "npc.json";
     private static final String STARTING_LOCATION = "MUSIC HALL";
+
 
     // commands
 
@@ -27,9 +30,9 @@ public class Game {
         System.out.printf("%s\n\n", splashText);
         System.out.printf("%s\n\n", gameSummary);
 
-        String userInput = parser.promptAndCheckForQuit(
-                        "What would you like to do?\nPlay\n",
-                        "(?i)(PLAY)",
+        String userInput = parser.prompt(
+                        "What would you like to do?\nPlay\tQuit\n",
+                        PlayerCommand.getCommandsRegex(PlayerCommand.PLAY,PlayerCommand.QUIT),
                         Color.RED.setFontColor("\nInvalid Command. Please enter Play or Quit\n"))
                 .toUpperCase();
 
@@ -51,14 +54,15 @@ public class Game {
 
         Location currentLocation = locations.get(STARTING_LOCATION);
 
+        System.out.println(currentLocation.getDescription());
 
         while (true) {
-            clearScreen();
+
             // Prompt user for a command
 
-            String userInput = parser.promptAndCheckForQuit(
-                            currentLocation.getDescription(),
-                            "(?i)(GO|TALK|EXAMINE) ([\\w\\s]+)|HELP",
+            String userInput = parser.prompt(
+                            "Please enter a command > ",
+                            PlayerCommand.getCommandsRegex(),
                             Color.RED.setFontColor("Invalid Command. To view list of valid commands, type HELP"))
                     .toUpperCase();
 
@@ -72,18 +76,21 @@ public class Game {
             }
 
             // Process the command entered by the user.
+
+            clearScreen();
             if (PlayerCommand.HELP.toString().equalsIgnoreCase(command)) {
                 System.out.println(PlayerCommand.getHelpMenu());
             } else if (PlayerCommand.GO.toString().equalsIgnoreCase(command) && currentLocation.containsLocation(noun)) {
                 currentLocation = locations.get(noun);
+                System.out.println(currentLocation.getDescription());
             } else if (PlayerCommand.TALK.toString().equalsIgnoreCase(command) && currentLocation.containsNpc(noun)) {
                 NPC selectedNPC = allNPCs.get(noun);
                 System.out.println(selectedNPC.getDialogue());
             } else if (PlayerCommand.EXAMINE.toString().equalsIgnoreCase(command) && currentLocation.getItems().contains(noun)) {
                 System.out.println("Trying to examine an item");
             } else {
-                System.out.println(Color.RED.setFontColor(String.format("%s is invalid\n", noun)));
-                parser.promptContinue();
+
+                System.out.println(Color.RED.setFontColor(String.format("%s is invalid for %s command\nType HELP for more context\n", noun,command)));
             }
         }
         handleQuit();
