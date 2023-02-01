@@ -1,64 +1,81 @@
 [
   {
-    "name": "Eager Fan Rocky",
-    "questItem": "Autograph",
-    "items": ["Guitar Pedal"],
-    "dialog": {
-      "prequest": "I'm so shy... hey, would you get Suzy's autograph for me? I'll give you something good.",
-      "postquest": "Thank you so much for the the autograph! Hope the pedal comes in handy!"
+    "name": "Rocky",
+    "dialogue": [
+      "Hey! Rocky here. I'm excited for this concert!",
+      "I'm a big fan of Suzy. I'll make sure to be right at the front of the stage."
+    ],
+    "items": {
+      "Guitar Pedal": {
+        "expects": "Autograph",
+        "tradeText": "Wow you approached Suzy? How is she upfront? Thank you! Here's that pedal"
+      }
     }
   },
   {
-    "name": "Rockstar Suzy",
-    "items":  ["Autograph"],
-    "dialog": {
-      "prequest": "An autograph? Anything for a fan.",
-      "postquest": "Sorry, I've already given you an autograph. I'm a little busy now."
+    "name": "Suzy",
+    "dialogue": [
+      "We are going to nail this competition!",
+      "What's up? You want an autograph or something?"
+    ],
+    "items": {
+      "Autograph": {
+        "tradeText": "Here's that autograph! I did not write it out to anyone, hope that's okay."
+      }
     }
   },
   {
-    "name": "Larry the Drummer",
-    "items": ["Drum Sticks"],
-    "dialog": {
-      "prequest": "You want my drum sticks? Eh, these are my special ones. Here's some spares I have.",
-      "postquest": ""
+    "name": "Larry",
+    "dialogue": [
+      "I can feel the beat flowing through me.",
+      "BA-DA-BOOM BA-DA-BOOM! How's my air-drum solo?"
+    ],
+    "items": {
+      "Drum Sticks": {
+        "tradeText": "They're not as good as my own, but a beginner like you could use them."
+      }
     }
   },
   {
     "name": "Friend",
-    "items": ["Door Key", "VIP Ticket"],
-    "dialog": {
-      "default": "aint go lie",
-      "withVocab": "baby",
-      "itemFound": "bye bye bye"
+    "dialogue": [
+      "I'm so glad you made it. Cheer for us out there!",
+      "I feel a little intimidated by the other musicians... but I know we're good, too."
+    ],
+    "items": {
+      "VIP Ticket": {
+        "tradeText": "Here's the ticket I promised. You should be able to get into the VIP Lounge with it.",
+        "tradeLocation": "Info Booth"
+      },
+      "Key": {
+        "tradeText": "Here's the key to my dressing room. Please don't trash it..."
+      }
     }
   },
-
   {
-    "name": "Johnny The Bartender",
-    "items": ["Saxophone Reed"],
-    "dialog": {
-      "default": "aint go lie",
-      "withVocab": "baby",
-      "itemFound": "bye bye bye"
+    "name": "Johnny",
+    "dialogue": [
+      "We're soaring with business today thanks to this event. Hey, what can I get ya?",
+      "I've worked here a while, so I am very familiar with the venue. Ask me anything!"
+    ],
+    "items": {
+      "Saxophone Reed": {
+        "tradeText": "This one's brand new. I wouldn't give it to just anyone... but you're doing us a favor."
+      }
     }
   },
-
   {
     "name": "Security Guard",
-    "questItem": "VIP Ticket",
-    "dialog": {
-      "default": "aint go lie",
-      "withVocab": "baby",
-      "itemFound": "bye bye bye"
-    }
+    "dialogue": [
+      "Welcome. Please enjoy the show and be mindful of others.",
+      "You're here very early. You'll need a VIP ticket if you want to do anything."
+    ]
   },
   {
     "name": "Director",
-    "dialog": {
-      "default": "aint go lie",
-      "withVocab": "baby",
-      "itemFound": "bye bye bye"
-    }
+    "dialog": [
+      "I wonder if the instruments will be fixed in time...",
+      "Hi, I'm the Director of this venue. Hoping you can enjoy the show later today."
+    ]
   }
 ]
