@@ -15,12 +15,12 @@ import java.util.stream.Collectors;
 class Item {
 
     private final String name;
-    private final String vocabName;
+    private final String alternate;
     private final String description;
 
-    public Item(String name, String vocabName, String description) {
+    public Item(String name, String alternate, String description) {
         this.name = name;
-        this.vocabName = vocabName;
+        this.alternate = alternate;
         this.description = description;
     }
 
@@ -40,8 +40,8 @@ class Item {
         return name;
     }
 
-    public String getVocabName() {
-        return vocabName;
+    public String getAlternate() {
+        return alternate;
     }
 
     public String getDescription() {
