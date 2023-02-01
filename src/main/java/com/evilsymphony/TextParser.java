@@ -3,9 +3,7 @@ package com.evilsymphony;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.Reader;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.util.Objects;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -20,7 +18,7 @@ public class TextParser {
     public String loadText(String filename) {
 
         // Use try-with-resources block to automatically close resources
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream(filename)))) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream(filename))))) {
 
             // Get the line separator to account for os defaults
             String separator = System.lineSeparator();
@@ -37,22 +35,13 @@ public class TextParser {
                         }
                     })
                     // Continue reading the file while there's still more lines
-                    .takeWhile((line) -> line != null)
+                    .takeWhile(Objects::nonNull)
                     // Join the lines into a single string separated by the line separator
                     .collect(Collectors.joining(separator));
         } catch (IOException e) {
             // Throw a runtime exception if there's an IOException while opening the file
             throw new RuntimeException(e);
         }
-
-
-//        String text = "";
-//        try {
-//            text = Files.readString(Path.of(filename));
-//        } catch(IOException e) {
-//            e.printStackTrace();
-//        }
-//        return text;
     }
 
     /**

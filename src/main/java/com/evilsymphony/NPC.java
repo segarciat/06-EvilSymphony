@@ -1,7 +1,6 @@
 package com.evilsymphony;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.*;
@@ -33,15 +32,15 @@ public class NPC {
         }
     }
 
-    // getters and setters
+
+
+    public  List<String> getDialogue() {
+        return dialogue;
+
+    }
+    // getters
 
     public String getName() {
         return name;
-    }
-
-    public  List<String> getDialogue() {
-        System.out.println(items);
-        return dialogue;
-
     }
 }
