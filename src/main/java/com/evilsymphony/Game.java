@@ -76,7 +76,7 @@ public class Game {
                 System.out.println(PlayerCommand.getHelpMenu());
             } else if (PlayerCommand.GO.toString().equalsIgnoreCase(command) && currentLocation.containsLocation(noun)) {
                 currentLocation = locations.get(noun);
-            } else if (PlayerCommand.TALK.toString().equalsIgnoreCase(command) && currentLocation.getNPCs().contains(noun)) {
+            } else if (PlayerCommand.TALK.toString().equalsIgnoreCase(command) && currentLocation.containsNpc(noun)) {
                 NPC selectedNPC = allNPCs.get(noun);
                 System.out.println(selectedNPC.getDialog().get("default"));
             } else if (PlayerCommand.EXAMINE.toString().equalsIgnoreCase(command) && currentLocation.getItems().contains(noun)) {

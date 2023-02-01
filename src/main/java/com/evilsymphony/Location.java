@@ -1,13 +1,11 @@
 package com.evilsymphony;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.google.gson.stream.JsonReader;
+
 
 import java.io.*;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -34,7 +32,7 @@ class Location {
     // business methods
 
     public String getDescription() {
-        // Describe the room and what the user can do here.
+
         StringBuilder sb = new StringBuilder();
 
         sb.append("You are in ").append(getName())
@@ -54,33 +52,43 @@ class Location {
         return sb.toString();
     }
 
-//    private static List<String> toUpperStrings(List<String> strings) {
-//        return strings.stream().map(String::toUpperCase).collect(Collectors.toList());
-//    }
-
-    public static Map<String,Location> loadLocations(String jsonFile) {
-        // Define the type of the object that will be returned
 
 
-        // Create a new instance of GsonBuilder and register a custom deserializer
+    public static Map<String, Location> loadLocations(String jsonFile) {
 
 
-        // Create a null list of Location objects to store the location data
-
-
-        try(Reader reader = new InputStreamReader(Objects.requireNonNull(Location.class.getClassLoader().getResourceAsStream(jsonFile)))){
-            Type locationMapType = new TypeToken<Map<String,Location>>(){}.getType();
-            Gson gson = new GsonBuilder()
-                    .registerTypeAdapter(locationMapType,new LocationsMapDeserializer())
-                    .create();
-            return gson.fromJson(reader,locationMapType);
+        try (Reader reader = new InputStreamReader(Objects.requireNonNull(Location.class.getClassLoader().getResourceAsStream(jsonFile)))) {
+            Type locationListType = new TypeToken<List<Location>>() {}.getType();
+            Gson gson = new Gson();
+            List<Location> locationList = gson.fromJson(reader, locationListType);
+            return locationList.stream().collect(Collectors.toMap(loc -> loc.getName().toUpperCase(), loc -> loc ));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
     }
 
-    // getters and setters
+    // business methods
+
+    public boolean containsLocation(String noun) {
+        return containsNounCaseInsensitive(directions, noun);
+    }
+
+    public boolean containsNpc(String noun) {
+        return containsNounCaseInsensitive(NPCs, noun);
+    }
+
+    private boolean containsNounCaseInsensitive(List<String> list, String searchKey) {
+        for (String noun : list) {
+            if (noun.equalsIgnoreCase(searchKey)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // getters
+
     public String getName() {
         return name;
     }
@@ -99,14 +107,5 @@ class Location {
 
     public List<String> getDirections() {
         return directions;
-    }
-
-    public boolean containsLocation(String noun) {
-        for(String location : directions) {
-            if (location.equalsIgnoreCase(noun)) {
-                return true;
-            }
-        }
-        return false;
     }
 }
