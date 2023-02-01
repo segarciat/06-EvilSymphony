@@ -47,7 +47,7 @@ public class Game {
     private void startGame() {
 
         Map<String, Location> locations = Location.loadLocations(LOCATION_FILE);
-        Map<String, NPC> allNPCs = NPC.loadNpcs(NPC_FILE);
+        Map<String, NPC> allNPCs = NPC.loadNPCs(NPC_FILE);
 
         Location currentLocation = locations.get(STARTING_LOCATION);
 
@@ -78,7 +78,7 @@ public class Game {
                 currentLocation = locations.get(noun);
             } else if (PlayerCommand.TALK.toString().equalsIgnoreCase(command) && currentLocation.containsNpc(noun)) {
                 NPC selectedNPC = allNPCs.get(noun);
-                System.out.println(selectedNPC.getDialog().get("default"));
+                System.out.println(selectedNPC.getDialogue());
             } else if (PlayerCommand.EXAMINE.toString().equalsIgnoreCase(command) && currentLocation.getItems().contains(noun)) {
                 System.out.println("Trying to examine an item");
             } else {
