@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.*;
 import java.lang.reflect.Type;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -32,10 +33,17 @@ public class NPC {
         }
     }
 
+// Task 629: Change the implementation of the instance method called getDialogue() in the NPC class so that it returns a single, random String from the list
 
+    public  String getDialogue() {
+        if (dialogue == null || dialogue.isEmpty()) {
+            return "";
+        }else {
+            int listSize = dialogue.size();
+            int randomDialogIndex = (int) (Math.random() * listSize);
+            return dialogue.get(randomDialogIndex);
+        }
 
-    public  List<String> getDialogue() {
-        return dialogue;
 
     }
     // getters
