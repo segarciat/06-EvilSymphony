@@ -9,6 +9,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class NPC {
     private final String name;
@@ -21,12 +22,10 @@ public class NPC {
 
     public static Map<String, NPC> loadNPCs(String jsonFile) {
         try (Reader reader = new InputStreamReader(Objects.requireNonNull(NPC.class.getClassLoader().getResourceAsStream(jsonFile)))) {
-            Type npcMapType = new TypeToken<Map<String, NPC>>() {
-            }.getType();
-            Gson gson = new GsonBuilder()
-                    .registerTypeAdapter(npcMapType, new NPCDeserializer())
-                    .create();
-            return gson.fromJson(reader, npcMapType);
+            Type npcListType = new TypeToken<List<NPC>>() {}.getType();
+            Gson gson = new Gson();
+            List<NPC> npcList = gson.fromJson(reader, npcListType);
+            return npcList.stream().collect(Collectors.toMap(npc -> npc.getName().toUpperCase(), npc -> npc));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
