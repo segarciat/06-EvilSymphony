@@ -10,6 +10,7 @@ public class Game {
     private static final String MAP_FILE = "Map.txt";
     private static final String LOCATION_FILE = "location.json";
     private static final String NPC_FILE = "npc.json";
+    private static final String ITEM_FILE = "items.json";
 
     private static final String STARTING_LOCATION = "MUSIC HALL";
 
@@ -57,6 +58,7 @@ public class Game {
 
         Map<String, Location> locations = Location.loadLocations(LOCATION_FILE);
         Map<String, NPC> allNPCs = NPC.loadNPCs(NPC_FILE);
+        Map<String, Item> items = Item.loadItems(ITEM_FILE);
 
         Location currentLocation = locations.get(STARTING_LOCATION);
 
