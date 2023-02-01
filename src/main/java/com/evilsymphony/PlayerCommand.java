@@ -1,55 +1,48 @@
 package com.evilsymphony;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
-import com.google.gson.stream.JsonReader;
+public enum PlayerCommand {
+    GO("Go LOCATION", "Changes your room"),
+    HELP("HELP", "Lists all valid commands, and describes what they do."),
+    QUIT("Quit", "Ends the game."),
+    GET("Get ITEM", "Takes an item and places it into your inventory."),
+    EXAMINE("Examine ITEM", "Provides information about an item."),
+    TALK("Talk NPC", "Start a dialog with npc."),
+    FIX("Fix INSTRUMENT", "Repair an item."),
+    REPLACE("Replace ITEM", "Swap with existing item."),
+    TRADE("Trade ITEM", "Trade an item with an NPC."),
+    LOOk("Look ITEM", "Examine an item to get more information"),
+    SAVE("Save GAME", "Save the current game."),
+    RESTORE("Restore GAME", "Restores a saved game."),
+    PLAY("Play", "Start the game.");
 
-import java.io.*;
-import java.lang.reflect.Type;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-
-public class PlayerCommand {
-
-    private final String name;
+    private final String format;
     private final String helpText;
 
-    public PlayerCommand(String name, String helpText) {
-        this.name = name;
+    PlayerCommand(String format, String helpText) {
+        this.format = format;
         this.helpText = helpText;
-
     }
 
-    //method
-    public static List<PlayerCommand> loadCommands(String jsonFile) {
-        try(Reader reader = new InputStreamReader(Objects.requireNonNull(PlayerCommand.class.getClassLoader().getResourceAsStream(jsonFile)))){
-            Type commandListType = new TypeToken<List<PlayerCommand>>(){}.getType();
-            Gson gson = new Gson();
-            return gson.fromJson(reader,commandListType);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+    /**
+     * Creates a new string with a listing of available commands.
+     *
+     * @return String of commands.
+     */
+    public static String getHelpMenu() {
+        //System.out.println("HELP\n\tList all valid commands and describe what they do");
+        StringBuilder sb = new StringBuilder("Help Menu\n");
+
+        for (PlayerCommand cmd : PlayerCommand.values()) {
+            sb.append(String.format("%s\n\t%s\n", cmd.getFormat(), cmd.getHelpText()));
         }
+        return sb.toString();
     }
 
-    // getters and setters
-    public String getName() {
-        return name;
+    public String getFormat() {
+        return format;
     }
-
 
     public String getHelpText() {
         return helpText;
-    }
-
-    public String getDescription() {
-        return String.format("%s \n\t %s",getName(),getHelpText());
-    }
-
-    //toString
-    @Override
-    public String toString() {
-        return "User{" + "name='" + getName() + "\n" + ", helpText=" + getHelpText() + "}";
     }
 }

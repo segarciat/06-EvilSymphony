@@ -3,15 +3,12 @@ package com.evilsymphony;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.Reader;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class TextParser {
-    public static final String QUIT = "QUIT";
+
     private final Scanner scanner = new Scanner(System.in);
 
     /**
@@ -87,8 +84,8 @@ public class TextParser {
      * Same as prompt(), but also listens for QUIT.
      */
     public String promptAndCheckForQuit(String message, String regex, String helpText) {
-        message = String.format("%s%s\n>", message, QUIT);
-        regex = String.format("%s|(%s)", regex, QUIT);
+        message = String.format("%s%s\n>", message, PlayerCommand.QUIT);
+        regex = String.format("%s|(%s)", regex, PlayerCommand.QUIT);
         return prompt(message, regex, helpText);
     }
 
