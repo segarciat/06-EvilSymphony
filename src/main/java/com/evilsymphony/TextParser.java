@@ -58,7 +58,7 @@ public class TextParser {
                 return userInput;
             else {
                 System.out.println(helpText);
-                promptContinue();
+
             }
         }
     }
@@ -66,11 +66,11 @@ public class TextParser {
     /**
      * Force player to press C before continuing.
      */
-    public void promptContinue() {
-        do {
-            System.out.println("Press C to continue game");
-        } while (!scanner.nextLine().equalsIgnoreCase("C"));
-    }
+//    public void promptContinue() {
+//        do {
+//            System.out.println("Press C to continue game");
+//        } while (!scanner.nextLine().equalsIgnoreCase("C"));
+//    }
 
     /**
      * Same as prompt(), but also listens for QUIT.

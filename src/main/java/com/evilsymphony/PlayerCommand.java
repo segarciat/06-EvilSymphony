@@ -1,5 +1,8 @@
 package com.evilsymphony;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 public enum PlayerCommand {
     GO("Go LOCATION", "Changes your room"),
     HELP("HELP", "Lists all valid commands, and describes what they do."),
@@ -36,6 +39,20 @@ public enum PlayerCommand {
             sb.append(String.format("%s\n\t%s\n", cmd.getFormat(), cmd.getHelpText()));
         }
         return sb.toString();
+    }
+
+
+    public static String getCommandsRegex(PlayerCommand... commands) {
+
+        return String.format("(?i)(%s).*",
+                Arrays.stream(commands)
+                        .map(Enum::toString)
+                        .collect(Collectors.joining("|")));
+    }
+
+    public static String getCommandsRegex() {
+
+        return getCommandsRegex(PlayerCommand.values());
     }
 
     public String getFormat() {

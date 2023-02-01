@@ -36,18 +36,18 @@ class Location {
         StringBuilder sb = new StringBuilder();
 
         sb.append("You are in ").append(getName())
-                .append("\n")
+                .append(System.lineSeparator())
                 .append(getWelcomeMessage())
-                .append("\n");
+                .append(System.lineSeparator());
 
         for (String locationName : directions)
-            sb.append("Go ").append(locationName).append("\n");
+            sb.append(PlayerCommand.GO).append(" ").append(locationName).append(System.lineSeparator());
 
         for (String itemName : items)
-            sb.append("examine ").append(itemName).append("\n");
+            sb.append(PlayerCommand.EXAMINE).append(" ").append(itemName).append(System.lineSeparator());
 
         for (String npc : NPCs)
-            sb.append("talk ").append(npc).append("\n");
+            sb.append(PlayerCommand.TALK).append(" ").append(npc).append(System.lineSeparator());
 
         return sb.toString();
     }
