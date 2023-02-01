@@ -7,9 +7,10 @@ import java.util.*;
 public class Game {
     private static final String GAME_SUMMARY_FILE = "game_summary.txt";
     private static final String SPLASH_FILE = "splash.txt";
-
+    private static final String MAP_FILE = "Map.txt";
     private static final String LOCATION_FILE = "location.json";
     private static final String NPC_FILE = "npc.json";
+
     private static final String STARTING_LOCATION = "MUSIC HALL";
 
 
@@ -18,6 +19,11 @@ public class Game {
 
 
     private final TextParser parser = new TextParser();
+    private  final String MAP_LAYOUT ;
+
+    public Game() {
+        MAP_LAYOUT = parser.loadText(MAP_FILE);
+    }
 
     /**
      * Starting point of the application.
@@ -80,6 +86,8 @@ public class Game {
             clearScreen();
             if (PlayerCommand.HELP.toString().equalsIgnoreCase(command)) {
                 System.out.println(PlayerCommand.getHelpMenu());
+            } else if (PlayerCommand.MAP.toString().equalsIgnoreCase(command)){
+                displayMap(currentLocation);
             } else if (PlayerCommand.GO.toString().equalsIgnoreCase(command) && currentLocation.containsLocation(noun)) {
                 currentLocation = locations.get(noun);
                 System.out.println(currentLocation.getDescription());
@@ -94,6 +102,12 @@ public class Game {
             }
         }
         handleQuit();
+    }
+
+    private void displayMap(Location currentLocation) {
+        String s = String.format("You are in: %s%s",currentLocation.getName(), System.lineSeparator());
+        System.out.println(MAP_LAYOUT);
+        System.out.println(Color.GREEN.setFontColor(s));
     }
 
     /**
