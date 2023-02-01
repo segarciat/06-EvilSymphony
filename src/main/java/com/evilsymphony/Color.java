@@ -31,6 +31,7 @@ public enum Color {
      * @return String with same text given, but displayed in colored background when printed.
      */
     public String setBackgroundColor(String text) {
+
         return String.format("\033%s%s\033[0m", backgroundCode, text);
     }
 }
