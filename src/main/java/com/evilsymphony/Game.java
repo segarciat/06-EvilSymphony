@@ -1,6 +1,5 @@
 package com.evilsymphony;
 
-import java.io.IOException;
 import java.util.*;
 
 public class Game {
@@ -9,15 +8,10 @@ public class Game {
 
     private static final String LOCATION_FILE = "location.json";
     private static final String NPC_FILE = "npc.json";
-    private static final String COMMAND_FILE = "commands.json";
-
     private static final String STARTING_LOCATION = "MUSIC HALL";
 
     // commands
-    private static final String TALK = "TALK";
-    private static final String HELP = "HELP";
-    private static final String EXAMINE = "EXAMINE";
-    private static final String GO = "GO";
+
 
 
     private final TextParser parser = new TextParser();
@@ -25,7 +19,7 @@ public class Game {
     /**
      * Starting point of the application.
      */
-    public void run() throws IOException, InterruptedException {
+    public void run() {
         clearScreen();              //Game start clear
         String splashText = parser.loadText(SPLASH_FILE);
         String gameSummary = parser.loadText(GAME_SUMMARY_FILE);
@@ -39,9 +33,9 @@ public class Game {
                         Color.RED.setFontColor("\nInvalid Command. Please enter Play or Quit\n"))
                 .toUpperCase();
 
-        if (userInput.equals(TextParser.QUIT)) {
+        if (userInput.equals(PlayerCommand.QUIT.toString())) {
             System.out.println("Good bye!");
-        } else if (userInput.equals("PLAY")) {
+        } else if (userInput.equals(PlayerCommand.PLAY.toString())) {
             clearScreen();
             startGame();
         }
@@ -50,19 +44,19 @@ public class Game {
     /**
      * Initializes main game loop.
      */
-    private void startGame() throws IOException, InterruptedException {
+    private void startGame() {
 
         Map<String, Location> locations = Location.loadLocations(LOCATION_FILE);
         Map<String, NPC> allNPCs = NPC.loadNPCs(NPC_FILE);
-        List<PlayerCommand> commandList = PlayerCommand.loadCommands(COMMAND_FILE);
 
         Location currentLocation = locations.get(STARTING_LOCATION);
 
-        String userInput = "";
-        while (!userInput.equals(TextParser.QUIT)) {
+
+        while (true) {
             clearScreen();
             // Prompt user for a command
-            userInput = parser.promptAndCheckForQuit(
+
+            String userInput = parser.promptAndCheckForQuit(
                             currentLocation.getDescription(),
                             "(?i)(GO|TALK|EXAMINE) ([\\w\\s]+)|HELP",
                             Color.RED.setFontColor("Invalid Command. To view list of valid commands, type HELP"))
@@ -73,18 +67,21 @@ public class Game {
 
             String command = commandParts[0];
             String noun = commandParts[1];
+            if(PlayerCommand.QUIT.toString().equalsIgnoreCase(command)){
+                break;
+            }
 
             // Process the command entered by the user.
-            if (HELP.equalsIgnoreCase(command)) {
-                displayHelpMenu(commandList);
-            } else if (GO.equalsIgnoreCase(command) && currentLocation.containsLocation(noun)) {
+            if (PlayerCommand.HELP.toString().equalsIgnoreCase(command)) {
+                System.out.println(PlayerCommand.getHelpMenu());
+            } else if (PlayerCommand.GO.toString().equalsIgnoreCase(command) && currentLocation.containsLocation(noun)) {
                 currentLocation = locations.get(noun);
-            } else if (TALK.equalsIgnoreCase(command) && currentLocation.containsNpc(noun)) {
+            } else if (PlayerCommand.TALK.toString().equalsIgnoreCase(command) && currentLocation.containsNpc(noun)) {
                 NPC selectedNPC = allNPCs.get(noun);
                 System.out.println(selectedNPC.getDialogue());
-            } else if (EXAMINE.equalsIgnoreCase(command) && currentLocation.getItems().contains(noun)) {
+            } else if (PlayerCommand.EXAMINE.toString().equalsIgnoreCase(command) && currentLocation.getItems().contains(noun)) {
                 System.out.println("Trying to examine an item");
-            } else if (commandList.stream().noneMatch(cmd -> cmd.getName().equalsIgnoreCase(command))) {
+            } else {
                 System.out.println(Color.RED.setFontColor(String.format("%s is invalid\n", noun)));
                 parser.promptContinue();
             }
@@ -92,45 +89,23 @@ public class Game {
         handleQuit();
     }
 
-    private void displayHelpMenu(List<PlayerCommand> cList) throws IOException, InterruptedException {
-        clearScreen();
-        System.out.println("\n-----------HELP MENU-------------");
-        for (PlayerCommand command : cList) {
-            System.out.printf("%s \n\n", command.getDescription());
-        }
-        System.out.println();
-    }
-
     /**
      * Performs any necessary cleanup and or closes files.
      */
-    private void handleQuit() throws IOException, InterruptedException {
+    private void handleQuit() {
         clearScreen();
-        char escCode = 0x1B;
-        int row = 10; int column = 10;
-       // System.out.print(String.format("%c[%d;%df",escCode,row,column));
+        // System.out.print(String.format("%c[%d;%df",escCode,row,column));
         System.out.println("Thanks for playing!");
-    }
-
-    public <T> boolean containsChoiceCaseInsensitive(String key, Map<String, T> map) {
-        return map.keySet().stream().anyMatch(k -> k.equalsIgnoreCase(key));
-    }
-
-    public <T> T getValueCaseInsensitive(String key, Map<String, T> map) {
-        return map.entrySet().stream()
-                .filter(e -> e.getKey().equalsIgnoreCase(key))
-                .map(e -> e.getValue()).findFirst()
-                .orElse(null);
     }
 
     /**
      * Performs clear console screen
      */
-    private void clearScreen() throws IOException, InterruptedException {
-
+    private void clearScreen(){
+        try {
             String os = System.getProperty("os.name");
 
-            if(os.contains("Windows"))
+            if (os.contains("Windows"))
                 //  cmd: Starts a new instance of the Windows command interpreter
                 //  /c: Carries out the command specified by the string and terminates
                 //  cls: clear screen
@@ -140,6 +115,10 @@ public class Game {
                 System.out.print("\033[H\033[2J");
                 System.out.flush();
             }
+        }
+        catch (Exception e){
+            throw new RuntimeException(e);
+        }
     }
 
 }
