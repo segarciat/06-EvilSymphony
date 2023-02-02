@@ -78,13 +78,11 @@ public class Game {
             // Process the command entered by the user.
             if(PlayerCommand.QUIT.isAliasOf(command)){
                 break;
-            }
-            else if (PlayerCommand.HELP.isAliasOf(command)) {
-                System.out.println(PlayerCommand.getHelpMenu());
+            } else if (PlayerCommand.HELP.isAliasOf(command)) {
+                PlayerCommand.displayHelpMenu();
             } else if (PlayerCommand.DESCRIBE.isAliasOf(command)) {
                 System.out.println(currentLocation.getDescription());
-            }
-            else if (PlayerCommand.MAP.isAliasOf(command)){
+            } else if (PlayerCommand.MAP.isAliasOf(command)){
                 displayMap(currentLocation);
             } else if (PlayerCommand.GO.isAliasOf(command) && currentLocation.containsLocation(noun)) {
                 currentLocation = locations.get(noun);
@@ -92,15 +90,18 @@ public class Game {
             } else if (PlayerCommand.TALK.isAliasOf(command) && currentLocation.containsNpc(noun)) {
                 NPC selectedNPC = allNPCs.get(noun);
                 System.out.println(selectedNPC.getDialogue());
-            } else if (PlayerCommand.LOOK.isAliasOf(command) && (currentLocation.containsItem(noun) || inventory.contains(noun))) {
+            } else if (PlayerCommand.DEALS.isAliasOf(command) && currentLocation.containsNpc(noun)) {
+                NPC selectedNPC = allNPCs.get(noun);
+                System.out.println(selectedNPC.getTradeDeals());
+            }
+            else if (PlayerCommand.LOOK.isAliasOf(command) && (currentLocation.containsItem(noun) || inventory.contains(noun))) {
                 Item item = items.get(noun);
-                System.out.printf("%s%s\t%s%s", item.getName(), System.lineSeparator(), item.getDescription(), System.lineSeparator());
+                System.out.println(item.getDescription());
             } else if (PlayerCommand.GET.isAliasOf(command) && currentLocation.containsItem(noun)){
                 Item item = items.get(noun);
                 inventory.addItem(item);
                 currentLocation.removeItem(noun);
-            }
-            else {
+            } else {
                 String feedback = String.format("The command %s is valid. ", command) +
                         String.format("It is unhandled by us, or not valid with %s at the moment. Type HELP for more info.", noun) +
                         System.lineSeparator();

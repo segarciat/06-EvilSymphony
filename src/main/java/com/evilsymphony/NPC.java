@@ -46,4 +46,22 @@ public class NPC {
     public String getName() {
         return name;
     }
+
+    public String getTradeDeals() {
+        StringBuilder sb = new StringBuilder(String.format("-------------Trade Deals for NPC: %s-----------", getName()))
+                .append(System.lineSeparator());
+
+        // items can be null if an NPC has no "items" attribute (because they don't own items)
+        if (items == null || items.isEmpty())
+            return sb.append("NO DEALS AVAILABLE").toString();
+
+        for (var item: items.entrySet()) {
+            String itemName = item.getKey();
+            String expects = item.getValue().getOrDefault("expects", "NOTHING");
+            sb.append(String.format("Item: %s%sEXPECTS: %s%s%s",
+                    itemName, System.lineSeparator(), expects, System.lineSeparator(), System.lineSeparator()));
+        }
+
+        return sb.toString();
+    }
 }

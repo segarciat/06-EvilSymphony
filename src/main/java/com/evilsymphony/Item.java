@@ -45,6 +45,6 @@ class Item {
     }
 
     public String getDescription() {
-        return description;
+        return String.format("%s%s\t%s%s", getName(), System.lineSeparator(), description, System.lineSeparator());
     }
 }

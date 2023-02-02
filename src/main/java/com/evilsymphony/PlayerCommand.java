@@ -13,6 +13,7 @@ public enum PlayerCommand {
     TALK("TALK NPC", "Start a dialog with npc."),
     REPLACE("REPLACE ITEM", "Swap with existing item."),
     TRADE("TRADE ITEM", "Trade an item with an NPC."),
+    DEALS("DEALS NPC", "Displays a list of item trading deals that can be had with NPC."),
     LOOK("LOOK ITEM", "Examine an item to get more information"),
     PLAY("PLAY", "Start the game."),
     MAP("MAP", "Displays the current map."),
@@ -32,17 +33,16 @@ public enum PlayerCommand {
 
     /**
      * Creates a new string with a listing of available commands.
-     *
-     * @return String of commands.
      */
-    public static String getHelpMenu() {
+    public static void displayHelpMenu() {
         StringBuilder sb = new StringBuilder("Help Menu\n");
 
         for (PlayerCommand cmd : PlayerCommand.values()) {
             sb.append(String.format("%s\n\t%s\n", cmd.getFormat(), cmd.getHelpText()));
         }
-        return sb.toString();
+        System.out.println(sb.toString());
     }
+
     public boolean isAliasOf(String s){
         return aliases.contains(s);
     }
