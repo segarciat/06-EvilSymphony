@@ -29,7 +29,6 @@ public class Game {
         clearScreen();              //Game start clear
         String splashText = parser.loadText(SPLASH_FILE);
         String gameSummary = parser.loadText(GAME_SUMMARY_FILE);
-        System.out.printf(PlayerCommand.getCommandsRegex());
         System.out.printf("%s\n\n", splashText);
         System.out.printf("%s\n\n", gameSummary);
 
@@ -93,18 +92,19 @@ public class Game {
             } else if (PlayerCommand.TALK.isAliasOf(command) && currentLocation.containsNpc(noun)) {
                 NPC selectedNPC = allNPCs.get(noun);
                 System.out.println(selectedNPC.getDialogue());
-            } else if (PlayerCommand.LOOK.isAliasOf(command) && currentLocation.containsItem(noun)) {
+            } else if (PlayerCommand.LOOK.isAliasOf(command) && (currentLocation.containsItem(noun) || inventory.contains(noun))) {
                 Item item = items.get(noun);
-                System.out.println(item.getDescription());
+                System.out.printf("%s%s\t%s%s", item.getName(), System.lineSeparator(), item.getDescription(), System.lineSeparator());
             } else if (PlayerCommand.GET.isAliasOf(command) && currentLocation.containsItem(noun)){
                 Item item = items.get(noun);
                 inventory.addItem(item);
                 currentLocation.removeItem(noun);
             }
             else {
-                System.out.println(Arrays.toString(commandParts));
-                System.out.println("WE are here!");
-                System.out.println(Color.RED.setFontColor(INVALID_COMMAND_TYPE_HELP));
+                String feedback = String.format("The command %s is valid. ", command) +
+                        String.format("It is unhandled by us, or not valid with %s at the moment. Type HELP for more info.", noun) +
+                        System.lineSeparator();
+                System.out.println(Color.RED.setFontColor(feedback));
             }
 
         }

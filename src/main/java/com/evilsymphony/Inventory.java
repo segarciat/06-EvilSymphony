@@ -32,4 +32,8 @@ public class Inventory {
             sb.append(String.format("\t%s%s", item.getName(), System.lineSeparator()));
         System.out.println(Color.YELLOW.setFontColor(sb.toString()));
     }
+
+    public boolean contains(String itemName) {
+        return items.stream().anyMatch(item -> item.getName().equalsIgnoreCase(itemName));
+    }
 }

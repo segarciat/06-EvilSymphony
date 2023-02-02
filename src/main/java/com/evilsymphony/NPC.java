@@ -38,7 +38,7 @@ public class NPC {
         }else {
             int listSize = dialogue.size();
             int randomDialogIndex = (int) (Math.random() * listSize);
-            return dialogue.get(randomDialogIndex);
+            return String.format("%s: %s", getName(), dialogue.get(randomDialogIndex));
         }
     }
 
