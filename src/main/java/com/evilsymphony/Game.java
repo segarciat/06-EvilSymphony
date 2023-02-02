@@ -2,29 +2,25 @@ package com.evilsymphony;
 
 import java.util.*;
 
-
-
 public class Game {
+
     private static final String GAME_SUMMARY_FILE = "game_summary.txt";
     private static final String SPLASH_FILE = "splash.txt";
-    private static final String MAP_FILE = "Map.txt";
+    private static final String MAP_FILE = "map.txt";
+
     private static final String LOCATION_FILE = "location.json";
     private static final String NPC_FILE = "npc.json";
     private static final String ITEM_FILE = "items.json";
 
-    private static final String STARTING_LOCATION = "MUSIC HALL";
+    private static final String PLAY_OR_QUIT_PROMPT_MESSAGE = "What would you like to do?\nPlay\tQuit\n";
+    private static final String INVALID_COMMAND_ENTER_PLAY_OR_QUIT = "\nInvalid Command. Please enter Play or Quit\n";
+    private static final String ENTER_COMMAND_PROMPT = "Please enter a command >";
+    private static final String INVALID_COMMAND_TYPE_HELP = "Invalid Command. To view list of valid commands, type HELP";
 
-
-    // commands
-
-
+    private static final String STARTING_LOCATION = "MAIN HALL";
 
     private final TextParser parser = new TextParser();
-    private  final String MAP_LAYOUT ;
-
-    public Game() {
-        MAP_LAYOUT = parser.loadText(MAP_FILE);
-    }
+    private final String MAP_LAYOUT = parser.loadText(MAP_FILE);
 
     /**
      * Starting point of the application.
@@ -38,13 +34,13 @@ public class Game {
         System.out.printf("%s\n\n", gameSummary);
 
         String userInput = parser.prompt(
-                        "What would you like to do?\nPlay\tQuit\n",
-                        PlayerCommand.getCommandsRegex(PlayerCommand.PLAY,PlayerCommand.QUIT),
-                        Color.RED.setFontColor("\nInvalid Command. Please enter Play or Quit\n"))
-                .toUpperCase();
+                        PLAY_OR_QUIT_PROMPT_MESSAGE,
+                        PlayerCommand.getCommandsRegex(PlayerCommand.PLAY, PlayerCommand.QUIT),
+                        Color.RED.setFontColor(INVALID_COMMAND_ENTER_PLAY_OR_QUIT)
+                ).toUpperCase();
 
         if (userInput.equals(PlayerCommand.QUIT.toString())) {
-            System.out.println("Good bye!");
+            handleQuit();
         } else if (userInput.equals(PlayerCommand.PLAY.toString())) {
             clearScreen();
             startGame();
@@ -68,9 +64,9 @@ public class Game {
             // Prompt user for a command
             displayPlayerInfo(inventory, currentLocation);
             String userInput = parser.prompt(
-                            "Please enter a command > ",
+                            ENTER_COMMAND_PROMPT,
                             PlayerCommand.getCommandsRegex(),
-                            Color.RED.setFontColor("Invalid Command. To view list of valid commands, type HELP"))
+                            Color.RED.setFontColor(INVALID_COMMAND_TYPE_HELP))
                     .toUpperCase();
 
             // Parse the command entered by the user.
@@ -78,14 +74,13 @@ public class Game {
 
             String command = commandParts[0];
             String noun = commandParts[1];
+
+            clearScreen();
+            // Process the command entered by the user.
             if(PlayerCommand.QUIT.toString().equalsIgnoreCase(command)){
                 break;
             }
-
-            // Process the command entered by the user.
-
-            clearScreen();
-            if (PlayerCommand.HELP.toString().equalsIgnoreCase(command)) {
+            else if (PlayerCommand.HELP.toString().equalsIgnoreCase(command)) {
                 System.out.println(PlayerCommand.getHelpMenu());
             } else if (PlayerCommand.DESCRIBE.toString().equalsIgnoreCase(command)) {
                 System.out.println(currentLocation.getDescription());
@@ -107,8 +102,7 @@ public class Game {
                 currentLocation.removeItem(noun);
             }
             else {
-
-                System.out.println(Color.RED.setFontColor(String.format("%s is invalid for %s command\nType HELP for more context\n", noun,command)));
+                System.out.println(Color.RED.setFontColor(INVALID_COMMAND_TYPE_HELP));
             }
 
         }

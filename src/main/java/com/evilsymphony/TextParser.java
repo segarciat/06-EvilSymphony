@@ -64,28 +64,10 @@ public class TextParser {
     }
 
     /**
-     * Force player to press C before continuing.
-     */
-//    public void promptContinue() {
-//        do {
-//            System.out.println("Press C to continue game");
-//        } while (!scanner.nextLine().equalsIgnoreCase("C"));
-//    }
-
-    /**
-     * Same as prompt(), but also listens for QUIT.
-     */
-    public String promptAndCheckForQuit(String message, String regex, String helpText) {
-        message = String.format("%s%s\n>", message, PlayerCommand.QUIT);
-        regex = String.format("%s|(%s)", regex, PlayerCommand.QUIT);
-        return prompt(message, regex, helpText);
-    }
-
-    /**
      * Converts the user input into a two-part command array.
      */
     public String[] parseCommand(String userInput) {
-        String[] inputArray = userInput.split(" ", 2);
+        String[] inputArray = userInput.split("\\s+", 2);
 
         if (inputArray.length == 1)
             return new String[]{userInput, ""};
