@@ -1,0 +1,57 @@
+[
+  {
+    "alternate": "Door Key",
+    "name": "Door Key",
+    "description": "A key to a door. Time to try every door."
+  },
+  {
+    "alternate": "Archer's Bow",
+    "name": "Cello Bow",
+    "description": "A piece of wood with a hair-like string material attached to it."
+  },
+  {
+    "alternate": "Small Electronic",
+    "name": "Guitar Tuner",
+    "description": "A device used to tune the strings of a guitar."
+  },
+  {
+    "alternate": "Popsicle Wood Stick",
+    "name": "Saxophone Reed",
+    "description": "A piece that allows you to play a saxophone by blowing air through it."
+  },
+  {
+    "alternate": "Car Pedal",
+    "name": "Guitar Pedal",
+    "description": "An attachment for an electric guitar that allows you to distort sounds."
+  },
+  {
+    "alternate": "Metal Globe on a Stick",
+    "name": "Microphone",
+    "description": "A device that intercepts sounds and amplifies them."
+  },
+  {
+    "alternate": "Drum Sticks",
+    "name": "Drum Sticks",
+    "description": "A pair of wooden sticks used to hit the membrane of a drum to create sound."
+  },
+  {
+    "alternate": "Vocabulary Book",
+    "name": "Vocabulary Book",
+    "description": "A book with knowledge about music instruments, theory, and related jargon."
+  },
+  {
+    "alternate": "Autograph",
+    "name": "Autograph",
+    "description": "A signed trinket by a famous musician."
+  },
+  {
+    "alternate": "VIP Ticket",
+    "name": "VIP Ticket",
+    "description": "Allows access to the VIP Lounge."
+  },
+  {
+    "alternate": "Hair Gel",
+    "name": "Hair Gel",
+    "description": "Good for styling your hair. A little goes a long way!"
+  }
+]

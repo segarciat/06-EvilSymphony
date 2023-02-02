@@ -1,0 +1,105 @@
+[
+  {
+    "name": "Music Hall",
+    "welcomeMessage": "Welcome to the show dont forget to check the info stand",
+    "NPCs": ["Security Guard"],
+    "items" : [],
+    "directions": [
+      "Info Booth",
+      "Vip Lounge",
+      "Stage"
+    ]
+  },
+
+  {
+    "name": "Info Booth",
+    "welcomeMessage": "It looks like theres a phone in here too",
+    "NPCs": ["Usher"],
+    "items" : ["Vocabulary Book"],
+    "directions": [
+      "Music Hall"
+    ]
+  },
+
+  {
+    "name": "Stage",
+    "welcomeMessage": "Wow all of these cool instruments",
+    "NPCs": ["Director"],
+    "items" : [],
+    "directions": [
+      "Backstage",
+      "Vip Lounge",
+      "Bathroom"
+    ]
+  },
+
+  {
+    "name": "Backstage",
+    "welcomeMessage": "Ive never been back stage is cool",
+    "NPCs": ["Security Guard","Rocky"],
+    "items" : [],
+    "directions": [
+      "Vip Lounge",
+      "Bathroom",
+      "Bar",
+      "Band Dressing Room",
+      "Friends Dressing Room"
+    ]
+  },
+
+  {
+    "name": "Bathroom",
+    "welcomeMessage": "Whats that smell",
+    "NPCs": [],
+    "items" : ["Tuner"],
+    "directions": [
+      "Stage",
+      "Backstage",
+      "Vip Lounge",
+      "Bar"
+    ]
+  },
+
+  {
+    "name": "Band Dressing Room",
+    "welcomeMessage": "Kinda small for 5 people",
+    "NPCs": [],
+    "items" : ["Hair Gel"],
+    "directions": [
+      "Backstage"
+    ]
+  },
+
+  {
+    "name": "Friends Dressing Room",
+    "welcomeMessage": "Whoa!",
+    "NPCs": [],
+    "items" : ["Microphone"],
+    "directions": [
+      "Backstage"
+    ]
+  },
+
+  {
+    "name": "Bar",
+    "welcomeMessage": "is that johnny!",
+    "NPCs": ["Johnny"],
+    "items" : [],
+    "directions": [
+      "Backstage",
+      "Bathroom"
+    ]
+  },
+  {
+    "name": "Vip Lounge",
+    "welcomeMessage": "Welcome our precious VIP member",
+    "NPCs": [],
+    "items" : ["Drum Sticks", "Autograph"],
+    "directions": [
+      "Music Hall",
+      "Stage",
+      "Backstage"
+    ]
+  }
+
+]
