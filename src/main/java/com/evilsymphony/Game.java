@@ -63,12 +63,10 @@ public class Game {
 
         Location currentLocation = locations.get(STARTING_LOCATION);
 
-        System.out.println(currentLocation.getDescription());
-
         while (true) {
 
             // Prompt user for a command
-            inventory.displayContents();
+            displayPlayerInfo(inventory, currentLocation);
             String userInput = parser.prompt(
                             "Please enter a command > ",
                             PlayerCommand.getCommandsRegex(),
@@ -89,7 +87,10 @@ public class Game {
             clearScreen();
             if (PlayerCommand.HELP.toString().equalsIgnoreCase(command)) {
                 System.out.println(PlayerCommand.getHelpMenu());
-            } else if (PlayerCommand.MAP.toString().equalsIgnoreCase(command)){
+            } else if (PlayerCommand.DESCRIBE.toString().equalsIgnoreCase(command)) {
+                System.out.println(currentLocation.getDescription());
+            }
+            else if (PlayerCommand.MAP.toString().equalsIgnoreCase(command)){
                 displayMap(currentLocation);
             } else if (PlayerCommand.GO.toString().equalsIgnoreCase(command) && currentLocation.containsLocation(noun)) {
                 currentLocation = locations.get(noun);
@@ -97,7 +98,7 @@ public class Game {
             } else if (PlayerCommand.TALK.toString().equalsIgnoreCase(command) && currentLocation.containsNpc(noun)) {
                 NPC selectedNPC = allNPCs.get(noun);
                 System.out.println(selectedNPC.getDialogue());
-            } else if (PlayerCommand.EXAMINE.toString().equalsIgnoreCase(command) && currentLocation.containsItem(noun)) {
+            } else if (PlayerCommand.LOOK.toString().equalsIgnoreCase(command) && currentLocation.containsItem(noun)) {
                 Item item = items.get(noun);
                 System.out.println(item.getDescription());
             } else if (PlayerCommand.GET.toString().equalsIgnoreCase(command) && currentLocation.containsItem(noun)){
@@ -112,6 +113,11 @@ public class Game {
 
         }
         handleQuit();
+    }
+
+    private void displayPlayerInfo(Inventory inventory, Location currentLocation) {
+        inventory.displayContents();
+        System.out.printf("You are in: %s%s", currentLocation.getName(), System.lineSeparator());
     }
 
     private void displayMap(Location currentLocation) {

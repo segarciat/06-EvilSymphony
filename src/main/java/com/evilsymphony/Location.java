@@ -40,14 +40,17 @@ class Location {
                 .append(getWelcomeMessage())
                 .append(System.lineSeparator());
 
+        sb.append("Connected rooms:\n");
         for (String locationName : directions)
-            sb.append(PlayerCommand.GO).append(" ").append(locationName).append(System.lineSeparator());
+            sb.append("\t").append(locationName).append(System.lineSeparator());
 
-        for (String itemName : items)
-            sb.append(PlayerCommand.EXAMINE).append(" ").append(itemName).append(System.lineSeparator());
-
+        sb.append("\nNPCs:\n");
         for (String npc : NPCs)
-            sb.append(PlayerCommand.TALK).append(" ").append(npc).append(System.lineSeparator());
+            sb.append("\t").append(npc).append(System.lineSeparator());
+
+        sb.append("\nItems:\n");
+        for (String itemName : items)
+            sb.append("\t").append(itemName).append(System.lineSeparator());
 
         return sb.toString();
     }
