@@ -30,7 +30,6 @@ public enum PlayerCommand {
      * @return String of commands.
      */
     public static String getHelpMenu() {
-        //System.out.println("HELP\n\tList all valid commands and describe what they do");
         StringBuilder sb = new StringBuilder("Help Menu\n");
 
         for (PlayerCommand cmd : PlayerCommand.values()) {

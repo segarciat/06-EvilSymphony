@@ -107,16 +107,4 @@ class Location {
     public String getWelcomeMessage() {
         return welcomeMessage;
     }
-
-    public List<String> getNPCs() {
-        return NPCs;
-    }
-
-    public List<String> getItems() {
-        return items;
-    }
-
-    public List<String> getDirections() {
-        return directions;
-    }
 }
