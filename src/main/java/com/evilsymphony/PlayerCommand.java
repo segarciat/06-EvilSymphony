@@ -50,7 +50,7 @@ public enum PlayerCommand {
 
     public static String getCommandsRegex(PlayerCommand... commands) {
 
-        return String.format("(?i)(%s).*",
+        return String.format("(?i)(%s)\\s*(.*)",
                 Arrays.stream(commands)
                         .flatMap(cmd -> cmd.aliases.stream())
                         .collect(Collectors.joining("|")));

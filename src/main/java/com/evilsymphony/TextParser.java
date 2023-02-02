@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Objects;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -67,11 +69,15 @@ public class TextParser {
      * Converts the user input into a two-part command array.
      */
     public String[] parseCommand(String userInput) {
-        String[] inputArray = userInput.split("\\s+", 2);
-
-        if (inputArray.length == 1)
-            return new String[]{userInput, ""};
-        else
-            return inputArray;
+        String[] inputArray = new String[2];
+        Pattern pattern = Pattern.compile(PlayerCommand.getCommandsRegex());
+        Matcher matcher = pattern.matcher(userInput);
+        if(matcher.matches()){
+            String command = matcher.group(1);
+            String rest = matcher.group(2);
+            inputArray[0] = command;
+            inputArray[1] = rest;
+        }
+        return inputArray;
     }
 }
