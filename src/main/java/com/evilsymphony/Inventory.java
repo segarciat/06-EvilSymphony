@@ -25,4 +25,11 @@ public class Inventory {
         items.remove(oldItem);
         items.add(newItem);
     }
+
+    public void displayContents() {
+        StringBuilder sb = new StringBuilder("------------------- INVENTORY ---------------------\n");
+        for (Item item: items)
+            sb.append(String.format("\t%s%s", item.getName(), System.lineSeparator()));
+        System.out.println(Color.YELLOW.setFontColor(sb.toString()));
+    }
 }

@@ -10,6 +10,7 @@ public class Game {
     private static final String MAP_FILE = "Map.txt";
     private static final String LOCATION_FILE = "location.json";
     private static final String NPC_FILE = "npc.json";
+    private static final String ITEM_FILE = "items.json";
 
     private static final String STARTING_LOCATION = "MUSIC HALL";
 
@@ -57,15 +58,15 @@ public class Game {
 
         Map<String, Location> locations = Location.loadLocations(LOCATION_FILE);
         Map<String, NPC> allNPCs = NPC.loadNPCs(NPC_FILE);
+        Map<String, Item> items = Item.loadItems(ITEM_FILE);
+        Inventory inventory = new Inventory();
 
         Location currentLocation = locations.get(STARTING_LOCATION);
-
-        System.out.println(currentLocation.getDescription());
 
         while (true) {
 
             // Prompt user for a command
-
+            displayPlayerInfo(inventory, currentLocation);
             String userInput = parser.prompt(
                             "Please enter a command > ",
                             PlayerCommand.getCommandsRegex(),
@@ -86,7 +87,10 @@ public class Game {
             clearScreen();
             if (PlayerCommand.HELP.toString().equalsIgnoreCase(command)) {
                 System.out.println(PlayerCommand.getHelpMenu());
-            } else if (PlayerCommand.MAP.toString().equalsIgnoreCase(command)){
+            } else if (PlayerCommand.DESCRIBE.toString().equalsIgnoreCase(command)) {
+                System.out.println(currentLocation.getDescription());
+            }
+            else if (PlayerCommand.MAP.toString().equalsIgnoreCase(command)){
                 displayMap(currentLocation);
             } else if (PlayerCommand.GO.toString().equalsIgnoreCase(command) && currentLocation.containsLocation(noun)) {
                 currentLocation = locations.get(noun);
@@ -94,14 +98,26 @@ public class Game {
             } else if (PlayerCommand.TALK.toString().equalsIgnoreCase(command) && currentLocation.containsNpc(noun)) {
                 NPC selectedNPC = allNPCs.get(noun);
                 System.out.println(selectedNPC.getDialogue());
-            } else if (PlayerCommand.EXAMINE.toString().equalsIgnoreCase(command) && currentLocation.getItems().contains(noun)) {
-                System.out.println("Trying to examine an item");
-            } else {
+            } else if (PlayerCommand.LOOK.toString().equalsIgnoreCase(command) && currentLocation.containsItem(noun)) {
+                Item item = items.get(noun);
+                System.out.println(item.getDescription());
+            } else if (PlayerCommand.GET.toString().equalsIgnoreCase(command) && currentLocation.containsItem(noun)){
+                Item item = items.get(noun);
+                inventory.addItem(item);
+                currentLocation.removeItem(noun);
+            }
+            else {
 
                 System.out.println(Color.RED.setFontColor(String.format("%s is invalid for %s command\nType HELP for more context\n", noun,command)));
             }
+
         }
         handleQuit();
+    }
+
+    private void displayPlayerInfo(Inventory inventory, Location currentLocation) {
+        inventory.displayContents();
+        System.out.printf("You are in: %s%s", currentLocation.getName(), System.lineSeparator());
     }
 
     private void displayMap(Location currentLocation) {

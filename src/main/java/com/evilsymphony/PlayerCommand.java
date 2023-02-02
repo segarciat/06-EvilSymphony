@@ -8,13 +8,13 @@ public enum PlayerCommand {
     HELP("HELP", "Lists all valid commands, and describes what they do."),
     QUIT("QUIT", "Ends the game."),
     GET("GET ITEM", "Takes an item and places it into your inventory."),
-    EXAMINE("EXAMINE ITEM", "Provides information about an item."),
     TALK("TALK NPC", "Start a dialog with npc."),
     REPLACE("REPLACE ITEM", "Swap with existing item."),
     TRADE("TRADE ITEM", "Trade an item with an NPC."),
     LOOK("LOOK ITEM", "Examine an item to get more information"),
     PLAY("PLAY", "Start the game."),
-    MAP("MAP", "Displays the current map");
+    MAP("MAP", "Displays the current map."),
+    DESCRIBE("DESCRIBE", "Describes the room the player is currently in.");
 
     private final String format;
     private final String helpText;
