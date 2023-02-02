@@ -29,7 +29,7 @@ public class Game {
         clearScreen();              //Game start clear
         String splashText = parser.loadText(SPLASH_FILE);
         String gameSummary = parser.loadText(GAME_SUMMARY_FILE);
-        System.out.printf(PlayerCommand.getCommandsRegex());
+
         System.out.printf("%s\n\n", splashText);
         System.out.printf("%s\n\n", gameSummary);
 
@@ -102,8 +102,6 @@ public class Game {
                 currentLocation.removeItem(noun);
             }
             else {
-                System.out.println(Arrays.toString(commandParts));
-                System.out.println("WE are here!");
                 System.out.println(Color.RED.setFontColor(INVALID_COMMAND_TYPE_HELP));
             }
 
@@ -127,7 +125,6 @@ public class Game {
      */
     private void handleQuit() {
         clearScreen();
-        // System.out.print(String.format("%c[%d;%df",escCode,row,column));
         System.out.println("Thanks for playing!");
     }
 
