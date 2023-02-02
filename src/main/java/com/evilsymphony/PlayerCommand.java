@@ -1,13 +1,16 @@
 package com.evilsymphony;
 
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public enum PlayerCommand {
     GO("GO LOCATION", "Changes your room"),
     HELP("HELP", "Lists all valid commands, and describes what they do."),
     QUIT("QUIT", "Ends the game."),
-    GET("GET ITEM", "Takes an item and places it into your inventory."),
+    GET("GET ITEM", "Takes an item and places it into your inventory.", "GRAB", "PICK UP", "TAKE"),
     TALK("TALK NPC", "Start a dialog with npc."),
     REPLACE("REPLACE ITEM", "Swap with existing item."),
     TRADE("TRADE ITEM", "Trade an item with an NPC."),
@@ -18,11 +21,15 @@ public enum PlayerCommand {
 
     private final String format;
     private final String helpText;
+    private final Set<String> aliases;
 
-    PlayerCommand(String format, String helpText) {
+    PlayerCommand(String format, String helpText, String... aliases) {
         this.format = format;
         this.helpText = helpText;
+        this.aliases = new HashSet<>(Set.of(aliases));
+        this.aliases.add(this.toString());
     }
+
 
     /**
      * Creates a new string with a listing of available commands.
@@ -37,14 +44,18 @@ public enum PlayerCommand {
         }
         return sb.toString();
     }
-
+    public boolean isAliasOf(String s){
+        System.out.println(s);
+        return aliases.contains(s);
+    }
 
     public static String getCommandsRegex(PlayerCommand... commands) {
 
         return String.format("(?i)(%s).*",
                 Arrays.stream(commands)
-                        .map(Enum::toString)
+                        .flatMap(cmd -> cmd.aliases.stream())
                         .collect(Collectors.joining("|")));
+
     }
 
     public static String getCommandsRegex() {
