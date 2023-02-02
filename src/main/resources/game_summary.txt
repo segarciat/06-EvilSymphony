@@ -1,0 +1,3 @@
+Evil Symphony is a text-based adventure game that takes place in the Maven Hall during a music competition. The player's
+friend is playing with their band Java Symphony, but someone has sabotaged them by rendering their instruments
+unplayable. The player must find the missing items to ensure the band is able to perform.
