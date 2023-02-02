@@ -29,7 +29,7 @@ public class Game {
         clearScreen();              //Game start clear
         String splashText = parser.loadText(SPLASH_FILE);
         String gameSummary = parser.loadText(GAME_SUMMARY_FILE);
-
+        System.out.printf(PlayerCommand.getCommandsRegex());
         System.out.printf("%s\n\n", splashText);
         System.out.printf("%s\n\n", gameSummary);
 
@@ -77,31 +77,33 @@ public class Game {
 
             clearScreen();
             // Process the command entered by the user.
-            if(PlayerCommand.QUIT.toString().equalsIgnoreCase(command)){
+            if(PlayerCommand.QUIT.isAliasOf(command)){
                 break;
             }
-            else if (PlayerCommand.HELP.toString().equalsIgnoreCase(command)) {
+            else if (PlayerCommand.HELP.isAliasOf(command)) {
                 System.out.println(PlayerCommand.getHelpMenu());
-            } else if (PlayerCommand.DESCRIBE.toString().equalsIgnoreCase(command)) {
+            } else if (PlayerCommand.DESCRIBE.isAliasOf(command)) {
                 System.out.println(currentLocation.getDescription());
             }
-            else if (PlayerCommand.MAP.toString().equalsIgnoreCase(command)){
+            else if (PlayerCommand.MAP.isAliasOf(command)){
                 displayMap(currentLocation);
-            } else if (PlayerCommand.GO.toString().equalsIgnoreCase(command) && currentLocation.containsLocation(noun)) {
+            } else if (PlayerCommand.GO.isAliasOf(command) && currentLocation.containsLocation(noun)) {
                 currentLocation = locations.get(noun);
                 System.out.println(currentLocation.getDescription());
-            } else if (PlayerCommand.TALK.toString().equalsIgnoreCase(command) && currentLocation.containsNpc(noun)) {
+            } else if (PlayerCommand.TALK.isAliasOf(command) && currentLocation.containsNpc(noun)) {
                 NPC selectedNPC = allNPCs.get(noun);
                 System.out.println(selectedNPC.getDialogue());
-            } else if (PlayerCommand.LOOK.toString().equalsIgnoreCase(command) && currentLocation.containsItem(noun)) {
+            } else if (PlayerCommand.LOOK.isAliasOf(command) && currentLocation.containsItem(noun)) {
                 Item item = items.get(noun);
                 System.out.println(item.getDescription());
-            } else if (PlayerCommand.GET.toString().equalsIgnoreCase(command) && currentLocation.containsItem(noun)){
+            } else if (PlayerCommand.GET.isAliasOf(command) && currentLocation.containsItem(noun)){
                 Item item = items.get(noun);
                 inventory.addItem(item);
                 currentLocation.removeItem(noun);
             }
             else {
+                System.out.println(Arrays.toString(commandParts));
+                System.out.println("WE are here!");
                 System.out.println(Color.RED.setFontColor(INVALID_COMMAND_TYPE_HELP));
             }
 
