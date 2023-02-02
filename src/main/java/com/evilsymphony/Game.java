@@ -17,7 +17,7 @@ public class Game {
     private static final String ENTER_COMMAND_PROMPT = "Please enter a command >";
     private static final String INVALID_COMMAND_TYPE_HELP = "Invalid Command. To view list of valid commands, type HELP";
 
-    private static final String STARTING_LOCATION = "MUSIC HALL";
+    private static final String STARTING_LOCATION = "MAIN HALL";
 
     private final TextParser parser = new TextParser();
     private final String MAP_LAYOUT = parser.loadText(MAP_FILE);
