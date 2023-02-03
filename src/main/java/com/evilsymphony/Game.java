@@ -29,6 +29,7 @@ public class Game {
     private Map<String, Item> items;
 
     private Player player;
+    BackgroundMusic music = new BackgroundMusic();
 
     /**
      * Starting point of the application.
@@ -66,6 +67,8 @@ public class Game {
         items = Item.loadItems(ITEM_FILE);
 
         player.setCurrentLocation(locations.get(STARTING_LOCATION));
+
+        music.play(player.getCurrentLocation().getMusic());
 
         System.out.println(player.getCurrentLocation().getDescription());
 
@@ -185,8 +188,10 @@ public class Game {
                             PlayerCommand.GO,noun, currentLocation.getName()))
             );
         } else {
+            if (music.isPlaying()) music.stop();
             currentLocation = locations.get(noun);
             player.setCurrentLocation(currentLocation);
+            if (music.MusicOptionIsYes()) music.play(currentLocation.getMusic());
             System.out.println(currentLocation.getDescription());
         }
     }

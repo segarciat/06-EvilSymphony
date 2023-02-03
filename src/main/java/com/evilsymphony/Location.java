@@ -18,14 +18,17 @@ class Location {
     private final List<String> NPCs;
     private List<String> items;
     private final List<String> directions;
+    private final String music;
 
-    public Location(String name, String welcomeMessage, List<String> NPCs, List<String> items, List<String> directions) {
+
+    public Location(String name, String welcomeMessage, List<String> NPCs, List<String> items, List<String> directions,String music) {
         // update later
         this.name = name;
         this.welcomeMessage = welcomeMessage;
         this.NPCs = NPCs;
         this.items = items;
         this.directions = directions;
+        this.music = music;
 
     }
 
@@ -116,5 +119,9 @@ class Location {
 
     public List<String> getNPCs() {
         return NPCs;
+    }
+
+    public String getMusic() {
+        return String.format("music/%s",music);
     }
 }
