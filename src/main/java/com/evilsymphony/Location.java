@@ -113,4 +113,8 @@ class Location {
     public String getWelcomeMessage() {
         return welcomeMessage;
     }
+
+    public List<String> getNPCs() {
+        return NPCs;
+    }
 }

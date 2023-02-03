@@ -1,6 +1,8 @@
 package com.evilsymphony;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Game {
 
@@ -195,7 +197,51 @@ public class Game {
     }
 
     private void handleTrade(String noun) {
-        System.out.println("Trade command was issued.");
+        Location currentLocation = player.getCurrentLocation();
+        String npcRegex = String.format("(?i)(%s)\\s+(.+)",
+                String.join("|", currentLocation.getNPCs()));
+        Pattern pattern = Pattern.compile(npcRegex);
+        Matcher matcher = pattern.matcher(noun);
+
+        if (!matcher.matches()) {
+            System.out.println(Color.RED.setFontColor(
+                    String.format("%s ERROR: no NPC named %s in %s",
+                            PlayerCommand.TRADE, matcher.group(1), currentLocation.getName()))
+            );
+            return;
+        }
+
+        NPC npc = allNPCs.get(matcher.group(1));
+        String itemPlayerWants = matcher.group(2);
+        if (!npc.has(itemPlayerWants)) {
+            System.out.println(Color.RED.setFontColor(
+                    String.format("%s ERROR: NPC named %s does not have item named %s",
+                            PlayerCommand.TRADE, npc.getName(), itemPlayerWants))
+            );
+            return;
+        }
+
+        String itemExpectedByNPC = npc.expectsWhenTrade(itemPlayerWants).toUpperCase();
+        if (!itemExpectedByNPC.isEmpty() && !player.has(itemExpectedByNPC)) {
+            System.out.println(Color.RED.setFontColor(
+                    String.format("%s ERROR: NPC named %s expects %s in exchange for %s, but you do not have it.",
+                            PlayerCommand.TRADE, npc.getName(), itemExpectedByNPC, itemPlayerWants))
+            );
+            return;
+        }
+
+        Item item = items.get(itemPlayerWants);
+        String tradeText = npc.removeItem(item.getName());
+        System.out.println(tradeText);
+
+        if (!itemExpectedByNPC.isEmpty()) {
+            player.removeItemFromInventory(items.get(itemExpectedByNPC));
+            System.out.printf("You have lost: %s%s", itemExpectedByNPC, System.lineSeparator());
+        }
+
+        player.addItemToInventory(item);
+        System.out.println("You have gained: " + itemPlayerWants);
+
     }
 
     private void displayPlayerInfo() {

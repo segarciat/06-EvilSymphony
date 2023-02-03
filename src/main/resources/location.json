@@ -94,7 +94,7 @@
   {
     "name": "VIP Lounge",
     "welcomeMessage": "Music is playing; you sense they are trying to excite people.",
-    "NPCs": [],
+    "NPCs": ["Suzy"],
     "items" : [],
     "directions": [
       "Main Hall",

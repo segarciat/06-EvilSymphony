@@ -6,7 +6,7 @@ import java.util.Set;
 
 class Player {
     private Location currentLocation;
-    private Set<Item> inventory = new HashSet<>();
+    private final Set<Item> inventory = new HashSet<>();
 
    public void setCurrentLocation(Location location) {
        this.currentLocation = location;
@@ -32,4 +32,7 @@ class Player {
        return Collections.unmodifiableSet(inventory);
    }
 
+    public void removeItemFromInventory(Item item) {
+       inventory.remove(item);
+    }
 }

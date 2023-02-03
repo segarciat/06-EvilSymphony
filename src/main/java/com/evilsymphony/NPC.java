@@ -18,7 +18,14 @@ public class NPC {
     public NPC(String name, List<String> dialogue, Map<String, Map<String, String>> items) {
         this.name = name;
         this.dialogue = dialogue;
-        this.items = items;
+        this.items = items == null? null: items.entrySet().stream()
+                .collect(Collectors.toMap(e -> e.getKey().toUpperCase(),
+                        Map.Entry::getValue)
+                );
+    }
+
+    public NPC(NPC npc) {
+        this(npc.getName(), npc.dialogue, npc.items);
     }
 
     public static Map<String, NPC> loadNPCs(String jsonFile) {
@@ -26,6 +33,7 @@ public class NPC {
             Type npcListType = new TypeToken<List<NPC>>() {}.getType();
             Gson gson = new Gson();
             List<NPC> npcList = gson.fromJson(reader, npcListType);
+            npcList = npcList.stream().map(NPC::new).collect(Collectors.toList());
             return npcList.stream().collect(Collectors.toMap(npc -> npc.getName().toUpperCase(), npc -> npc));
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -63,5 +71,35 @@ public class NPC {
         }
 
         return sb.toString();
+    }
+
+    public boolean has(String s) {
+        return items != null && items.keySet().stream().anyMatch(itemName -> itemName.equalsIgnoreCase(s));
+    }
+
+    public String expectsWhenTrade(String itemPlayerWants) {
+        if (!has(itemPlayerWants))
+            return "";
+        return items.get(itemPlayerWants).getOrDefault("expects", "");
+    }
+
+    /**
+     * Takes item away from NPC if it matches itemName exactly, and returns trade text said by NPC.
+     * @param itemName Item to be removed from NPC.
+     * @return Text that NPC says during trade.
+     */
+    public String removeItem(String itemName) {
+        var itemEntry = items == null?
+                null:
+                items.entrySet().stream()
+                .filter(e -> e.getKey().equalsIgnoreCase(itemName))
+                .findFirst()
+                .orElse(null);
+
+        if (itemEntry == null)
+            return "";
+
+        items.remove(itemEntry.getKey());
+        return String.format("%s: %s", getName(), itemEntry.getValue().get("tradeText"));
     }
 }
