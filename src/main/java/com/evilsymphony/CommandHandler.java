@@ -1,7 +1,6 @@
 package com.evilsymphony;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.List;
 
 class CommandHandler {
     private final Game game;
@@ -36,8 +35,16 @@ class CommandHandler {
         }
     }
 
+    /**
+     * Creates a new string with a listing of available commands.
+     */
     private void handleHelpCommand() {
-        PlayerCommand.displayHelpMenu();
+        StringBuilder sb = new StringBuilder("Help Menu\n");
+
+        for (PlayerCommand cmd : PlayerCommand.values())
+            sb.append(String.format("%s\n\t%s\n\tAliases: %s\n", cmd.getFormat(), cmd.getHelpText(), cmd.getAliases().toString()));
+
+        System.out.println(sb);
     }
 
     private void handleUnmatchedCommand(String command) {
@@ -119,12 +126,8 @@ class CommandHandler {
 
     private void handleTrade(String noun) {
         Location currentLocation = game.getPlayer().getCurrentLocation();
-        String npcRegex = String.format("(?i)(%s)\\s+(.+)",
-                String.join("|", currentLocation.getNPCs()));
-        Pattern pattern = Pattern.compile(npcRegex);
-        Matcher matcher = pattern.matcher(noun);
-
-        if (!matcher.matches()) {
+        List<String> nounParts = game.getParser().parseNPCTradeNouns(noun, currentLocation.getNPCs());
+        if (nounParts == null) {
             System.out.println(Color.RED.setFontColor(
                     String.format("%s ERROR: expected NPC located at %s and an item name.",
                             PlayerCommand.TRADE, currentLocation.getName()))
@@ -132,8 +135,8 @@ class CommandHandler {
             return;
         }
 
-        NPC npc = game.getAllNPCs().get(matcher.group(1));
-        String itemPlayerWants = matcher.group(2);
+        NPC npc = game.getAllNPCs().get(nounParts.get(0));
+        String itemPlayerWants = nounParts.get(1);
         if (!npc.has(itemPlayerWants)) {
             System.out.println(Color.RED.setFontColor(
                     String.format("%s ERROR: NPC named %s does not have item named %s",
@@ -164,7 +167,6 @@ class CommandHandler {
         System.out.println("You have gained: " + itemPlayerWants);
 
     }
-
 
     private void handleMapCommand() {
         Location currentLocation = game.getPlayer().getCurrentLocation();

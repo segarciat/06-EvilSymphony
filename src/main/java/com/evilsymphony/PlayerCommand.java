@@ -1,9 +1,7 @@
 package com.evilsymphony;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public enum PlayerCommand {
     GO("GO LOCATION", "Changes your room", "MOVE TO"),
@@ -30,33 +28,8 @@ public enum PlayerCommand {
         this.aliases.add(this.toString());
     }
 
-    /**
-     * Creates a new string with a listing of available commands.
-     */
-    public static void displayHelpMenu() {
-        StringBuilder sb = new StringBuilder("Help Menu\n");
-
-        for (PlayerCommand cmd : PlayerCommand.values())
-            sb.append(String.format("%s\n\t%s\n\tAliases: %s\n", cmd.getFormat(), cmd.getHelpText(), cmd.getAliases().toString()));
-
-        System.out.println(sb);
-    }
-
     public boolean isAliasOf(String s){
         return aliases.contains(s);
-    }
-
-    public static String getCommandsRegex(PlayerCommand... commands) {
-
-        return String.format("(?i)(%s)\\s*(.*)",
-                Arrays.stream(commands)
-                        .flatMap(cmd -> cmd.aliases.stream())
-                        .collect(Collectors.joining("|")));
-
-    }
-
-    public static String getCommandsRegex() {
-        return getCommandsRegex(PlayerCommand.values());
     }
 
     public String getFormat() {

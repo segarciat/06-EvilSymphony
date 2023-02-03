@@ -47,7 +47,7 @@ public class Game {
         // Prompt player to play or quit.
         String userInput = parser.prompt(
                         PLAY_OR_QUIT_PROMPT_MESSAGE,
-                        PlayerCommand.getCommandsRegex(PlayerCommand.PLAY, PlayerCommand.QUIT),
+                        parser.getCommandsRegex(PlayerCommand.PLAY, PlayerCommand.QUIT),
                         Color.RED.setFontColor(INVALID_COMMAND_ENTER_PLAY_OR_QUIT)
                 ).toUpperCase();
 
@@ -80,15 +80,15 @@ public class Game {
             // Prompt user for a command
             String userInput = parser.prompt(
                             ENTER_COMMAND_PROMPT,
-                            PlayerCommand.getCommandsRegex(),
+                            parser.getCommandsRegex(),
                             Color.RED.setFontColor(INVALID_COMMAND_TYPE_HELP))
                     .toUpperCase();
 
             // Parse the command entered by the user.
-            String[] commandParts = parser.parseCommand(userInput);
+            List<String> commandParts = parser.parseCommand(userInput);
 
-            String command = commandParts[0];
-            String noun = commandParts[1];
+            String command = commandParts.get(0);
+            String noun = commandParts.get(1);
 
             clearScreen();
 
@@ -160,5 +160,9 @@ public class Game {
 
     public String getGameMap() {
         return gameMap;
+    }
+
+    public TextParser getParser() {
+        return parser;
     }
 }

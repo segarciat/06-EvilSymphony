@@ -3,6 +3,8 @@ package com.evilsymphony;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -13,6 +15,7 @@ import java.util.stream.Stream;
 public class TextParser {
 
     private final Scanner scanner = new Scanner(System.in);
+    public final String allCommandsRegex = getCommandsRegex(PlayerCommand.values());
 
     /**
      * Loads text from a file and returns it.
@@ -68,16 +71,33 @@ public class TextParser {
     /**
      * Converts the user input into a two-part command array.
      */
-    public String[] parseCommand(String userInput) {
-        String[] inputArray = new String[2];
-        Pattern pattern = Pattern.compile(PlayerCommand.getCommandsRegex());
+    public List<String> parseCommand(String userInput) {
+        Pattern pattern = Pattern.compile(allCommandsRegex);
         Matcher matcher = pattern.matcher(userInput);
-        if(matcher.matches()){
-            String command = matcher.group(1);
-            String rest = matcher.group(2);
-            inputArray[0] = command;
-            inputArray[1] = rest;
-        }
-        return inputArray;
+        if (!matcher.matches())
+            return null;
+
+        return List.of(matcher.group(1), matcher.group(2));
+    }
+
+    public List<String> parseNPCTradeNouns(String noun, List<String> npcNames) {
+        String npcRegex = String.format("(?i)(%s)\\s+(.+)", String.join("|", npcNames));
+        Pattern pattern = Pattern.compile(npcRegex);
+        Matcher matcher = pattern.matcher(noun);
+        if (!matcher.matches())
+            return null;
+
+        return List.of(matcher.group(1), matcher.group(2));
+    }
+
+    public String getCommandsRegex(PlayerCommand... commands) {
+        return String.format("(?i)(%s)\\s*(.*)",
+                Arrays.stream(commands)
+                        .flatMap(cmd -> cmd.getAliases().stream())
+                        .collect(Collectors.joining("|")));
+    }
+
+    public String getCommandsRegex() {
+        return allCommandsRegex;
     }
 }
