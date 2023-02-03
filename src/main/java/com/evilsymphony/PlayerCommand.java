@@ -6,15 +6,15 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public enum PlayerCommand {
-    GO("GO LOCATION", "Changes your room"),
+    GO("GO LOCATION", "Changes your room", "MOVE TO"),
     HELP("HELP", "Lists all valid commands, and describes what they do."),
-    QUIT("QUIT", "Ends the game."),
+    QUIT("QUIT", "Ends the game.", "EXIT", "LEAVE"),
     GET("GET ITEM", "Takes an item and places it into your inventory.", "GRAB", "PICK UP", "TAKE"),
-    TALK("TALK NPC", "Start a dialog with npc."),
-    REPLACE("REPLACE ITEM", "Swap with existing item."),
-    TRADE("TRADE ITEM", "Trade an item with an NPC."),
     DEALS("DEALS NPC", "Displays a list of item trading deals that can be had with NPC."),
-    LOOK("LOOK ITEM", "Examine an item to get more information"),
+    TALK("TALK NPC", "Start a dialog with npc.", "TELL", "SPEAK TO", "CHAT"),
+    REPLACE("REPLACE ITEM", "Swap with existing item.", "CHANGE", "SWAP", "EXCHANGE"),
+    TRADE("TRADE ITEM", "Trade an item with an NPC.", "BARTER"),
+    LOOK("LOOK ITEM", "Examine an item to get more information", "EXAMINE", "CHECK", "INSPECT"),
     PLAY("PLAY", "Start the game."),
     MAP("MAP", "Displays the current map."),
     DESCRIBE("DESCRIBE", "Describes the room the player is currently in.");
@@ -38,7 +38,7 @@ public enum PlayerCommand {
         StringBuilder sb = new StringBuilder("Help Menu\n");
 
         for (PlayerCommand cmd : PlayerCommand.values()) {
-            sb.append(String.format("%s\n\t%s\n", cmd.getFormat(), cmd.getHelpText()));
+            sb.append(String.format("%s\n\t%s\n\tAliases: %s\n", cmd.getFormat(), cmd.getHelpText(), cmd.getAliases().toString()));
         }
         System.out.println(sb.toString());
     }
@@ -49,7 +49,7 @@ public enum PlayerCommand {
 
     public static String getCommandsRegex(PlayerCommand... commands) {
 
-        return String.format("(?i)(%s).*",
+        return String.format("(?i)(%s)\\s*(.*)",
                 Arrays.stream(commands)
                         .flatMap(cmd -> cmd.aliases.stream())
                         .collect(Collectors.joining("|")));
@@ -67,5 +67,9 @@ public enum PlayerCommand {
 
     public String getHelpText() {
         return helpText;
+    }
+
+    public Set<String> getAliases() {
+        return aliases;
     }
 }

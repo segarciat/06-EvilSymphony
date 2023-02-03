@@ -29,6 +29,7 @@ public class Game {
         clearScreen();              //Game start clear
         String splashText = parser.loadText(SPLASH_FILE);
         String gameSummary = parser.loadText(GAME_SUMMARY_FILE);
+
         System.out.printf("%s\n\n", splashText);
         System.out.printf("%s\n\n", gameSummary);
 
@@ -128,7 +129,6 @@ public class Game {
      */
     private void handleQuit() {
         clearScreen();
-        // System.out.print(String.format("%c[%d;%df",escCode,row,column));
         System.out.println("Thanks for playing!");
     }
 
