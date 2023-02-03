@@ -4,16 +4,16 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public enum PlayerCommand {
     GO("GO LOCATION", "Changes your room", "MOVE TO"),
     HELP("HELP", "Lists all valid commands, and describes what they do."),
     QUIT("QUIT", "Ends the game.", "EXIT", "LEAVE"),
     GET("GET ITEM", "Takes an item and places it into your inventory.", "GRAB", "PICK UP", "TAKE"),
+    DEALS("DEALS NPC", "Displays a list of item trading deals that can be had with NPC."),
     TALK("TALK NPC", "Start a dialog with npc.", "TELL", "SPEAK TO", "CHAT"),
     REPLACE("REPLACE ITEM", "Swap with existing item.", "CHANGE", "SWAP", "EXCHANGE"),
-    TRADE("TRADE ITEM", "Trade an item with an NPC.", "BARTER"),
+    TRADE("TRADE NPC ITEM", "Obtain ITEM from NPC. If NPC expects an item in return, you lose that item if you have it.", "BARTER"),
     LOOK("LOOK ITEM", "Examine an item to get more information", "EXAMINE", "CHECK", "INSPECT"),
     PLAY("PLAY", "Start the game."),
     MAP("MAP", "Displays the current map."),
@@ -30,20 +30,18 @@ public enum PlayerCommand {
         this.aliases.add(this.toString());
     }
 
-
     /**
      * Creates a new string with a listing of available commands.
-     *
-     * @return String of commands.
      */
-    public static String getHelpMenu() {
+    public static void displayHelpMenu() {
         StringBuilder sb = new StringBuilder("Help Menu\n");
 
-        for (PlayerCommand cmd : PlayerCommand.values()) {
+        for (PlayerCommand cmd : PlayerCommand.values())
             sb.append(String.format("%s\n\t%s\n\tAliases: %s\n", cmd.getFormat(), cmd.getHelpText(), cmd.getAliases().toString()));
-        }
-        return sb.toString();
+
+        System.out.println(sb);
     }
+
     public boolean isAliasOf(String s){
         return aliases.contains(s);
     }
@@ -58,7 +56,6 @@ public enum PlayerCommand {
     }
 
     public static String getCommandsRegex() {
-
         return getCommandsRegex(PlayerCommand.values());
     }
 

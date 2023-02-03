@@ -43,7 +43,8 @@
       "Bathroom",
       "Bar",
       "Band Dressing Room",
-      "Friends Dressing Room"
+      "Friends Dressing Room",
+      "Stage"
     ]
   },
 
@@ -51,7 +52,7 @@
     "name": "Bathroom",
     "welcomeMessage": "The smell here reminds you of your humanity.",
     "NPCs": [],
-    "items" : ["Tuner"],
+    "items" : ["Guitar Tuner"],
     "directions": [
       "Stage",
       "Backstage",
@@ -93,7 +94,7 @@
   {
     "name": "VIP Lounge",
     "welcomeMessage": "Music is playing; you sense they are trying to excite people.",
-    "NPCs": [],
+    "NPCs": ["Suzy"],
     "items" : [],
     "directions": [
       "Main Hall",

@@ -73,7 +73,13 @@ class Location {
 
     // business methods
 
-    public boolean containsLocation(String noun) {
+    /**
+     * Determines noun is a location name that can be reached from this location.
+     *
+     * @param noun String that could be the name of a location.
+     * @return Whether noun is a location name that can be reached from this location.
+     */
+    public boolean reaches(String noun) {
         return containsNounCaseInsensitive(directions, noun);
     }
 
@@ -106,5 +112,9 @@ class Location {
 
     public String getWelcomeMessage() {
         return welcomeMessage;
+    }
+
+    public List<String> getNPCs() {
+        return NPCs;
     }
 }

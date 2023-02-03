@@ -47,7 +47,7 @@
         "tradeText": "Here's the ticket I promised. You should be able to get into the VIP Lounge with it.",
         "tradeLocation": "Info Booth"
       },
-      "Key": {
+      "Door Key": {
         "tradeText": "Here's the key to my dressing room. Please don't trash it..."
       }
     }
@@ -73,7 +73,7 @@
   },
   {
     "name": "Director",
-    "dialog": [
+    "dialogue": [
       "I wonder if the instruments will be fixed in time...",
       "Hi, I'm the Director of this venue. Hoping you can enjoy the show later today."
     ]
