@@ -8,6 +8,9 @@ import java.util.Scanner;
 class BackgroundMusic {
     // Clip object to play the audio file. The audio data is stored in a Clip object as a series of samples
     private Clip clip;
+    public boolean isPlaying = false;
+    private boolean musicOptionIsYes = true;
+
 
     // Play the audio file
     public void play(String songFilePath) {
@@ -24,10 +27,13 @@ class BackgroundMusic {
             clip = (Clip) AudioSystem.getLine(info);
             // Open the Clip object with the audio input stream
             clip.open(ais);
+            setVolume(12);
             // Start playing the audio
             clip.start();
             // To make the audio loop continuously, set the loop points.
             clip.loop(Clip.LOOP_CONTINUOUSLY);
+            // set isPlaying bool to true
+            isPlaying = true;
         } catch (UnsupportedAudioFileException | LineUnavailableException | IOException e) {
             // Print stack trace if an error occurs
             e.printStackTrace();
@@ -40,17 +46,19 @@ class BackgroundMusic {
         if (clip != null) {
             // Stop playing the cassette
             clip.stop();
+            // set isPlaying bool to false
+            isPlaying = false;
         }
     }
 
-    // Set the volume of the cassette
-    public void setVolume(float volume) {
+
+    public void setVolume(int volume) {
+        // the actual range is -80.0 to 6.0206 dB. this conversion allows for a range of 1-20 and is adjusted
+        float dB = ((float) volume / 20 * 46) - 40;
         if (clip != null) {
-            // Get the volume control for the Clip object
             FloatControl volumeControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
             if (volumeControl != null) {
-                // Set the volume to the desired level
-                volumeControl.setValue(volume);
+                volumeControl.setValue(dB);
             }
         }
     }
@@ -59,39 +67,25 @@ class BackgroundMusic {
     public void promptVolume() {
         // Scanner to read the user input
         Scanner input = new Scanner(System.in);
-        System.out.print("Enter the audio level (0.0 to 1.0): ");
+        System.out.print("Enter the audio level (1 - 20 ): ");
         // Call the setVolume method with the user input as the argument
-        setVolume(input.nextFloat());
+        setVolume(input.nextInt());
     }
 
-    public void backgroundSongs(String location) {
-
-        switch (location) {
-            case "MAIN HALL":
-                stop();
-                play("mainHallSong.wav");
-                break;
-            case "STAGE":
-                stop();
-                play("stageSong.wav");
-                break;
-            case "BACKSTAGE":
-                stop();
-                play("backstageSong.wav");
-                break;
-            case "BAR":
-                stop();
-                play("barSong.wav");
-                break;
-            case "BAND DRESSING ROOM":
-                stop();
-                play("bandDressingRoomSong.wav");
-                break;
-
-            default:
-
-        }
-
+    public boolean isPlaying() {
+        return isPlaying;
     }
 
+    public void setPlaying(boolean playing) {
+        isPlaying = playing;
+    }
+
+
+    public boolean MusicOptionIsYes() {
+        return musicOptionIsYes;
+    }
+
+    public void setMusicOptionIsYes(boolean musicOptionIsYes) {
+        this.musicOptionIsYes = musicOptionIsYes;
+    }
 }

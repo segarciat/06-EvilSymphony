@@ -29,6 +29,7 @@ public class Game {
     private Map<String, Item> items;
 
     private Player player;
+    BackgroundMusic music = new BackgroundMusic();
 
     /**
      * Starting point of the application.
@@ -67,6 +68,8 @@ public class Game {
 
         player.setCurrentLocation(locations.get(STARTING_LOCATION));
 
+        music.play(player.getCurrentLocation().getMusic());
+
         System.out.println(player.getCurrentLocation().getDescription());
 
         while (true) {
@@ -89,6 +92,16 @@ public class Game {
             // Process the command entered by the user.
             if(PlayerCommand.QUIT.isAliasOf(command)){
                 break;
+
+            }
+            else if (PlayerCommand.MUSIC_ON.isAliasOf(command)) {
+                handleMusicOnCommand(player);
+            }
+            else if (PlayerCommand.MUSIC_OFF.isAliasOf(command)) {
+                handleMusicOffCommand();
+            }
+            else if (PlayerCommand.MUSIC_VOL.isAliasOf(command)) {
+                handleMusicVolCommand();
             } else if (PlayerCommand.HELP.isAliasOf(command)) {
                 handleHelpCommand();
             } else if (PlayerCommand.DESCRIBE.isAliasOf(command)) {
@@ -113,6 +126,24 @@ public class Game {
 
         }
         handleQuit();
+    }
+
+    private void handleMusicVolCommand() {
+        music.promptVolume();
+    }
+
+    private void handleMusicOffCommand() {
+        if(music.isPlaying()) {
+            music.stop();
+            music.setMusicOptionIsYes(false);
+        }
+    }
+
+    private void handleMusicOnCommand(Player player) {
+        if(!music.isPlaying()) {
+            music.play(player.getCurrentLocation().getMusic());
+            music.setMusicOptionIsYes(true);
+        }
     }
 
     private void handleHelpCommand() {
@@ -185,8 +216,10 @@ public class Game {
                             PlayerCommand.GO,noun, currentLocation.getName()))
             );
         } else {
+            if (music.isPlaying()) music.stop();
             currentLocation = locations.get(noun);
             player.setCurrentLocation(currentLocation);
+            if (music.MusicOptionIsYes()) music.play(currentLocation.getMusic());
             System.out.println(currentLocation.getDescription());
         }
     }

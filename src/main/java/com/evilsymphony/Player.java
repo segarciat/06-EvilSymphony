@@ -8,6 +8,7 @@ class Player {
     private Location currentLocation;
     private final Set<Item> inventory = new HashSet<>();
 
+
    public void setCurrentLocation(Location location) {
        this.currentLocation = location;
    }
