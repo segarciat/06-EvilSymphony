@@ -27,6 +27,7 @@ class BackgroundMusic {
             clip = (Clip) AudioSystem.getLine(info);
             // Open the Clip object with the audio input stream
             clip.open(ais);
+            setVolume(12);
             // Start playing the audio
             clip.start();
             // To make the audio loop continuously, set the loop points.
@@ -50,14 +51,14 @@ class BackgroundMusic {
         }
     }
 
-    // Set the volume of the cassette
-    public void setVolume(float volume) {
+
+    public void setVolume(int volume) {
+        // the actual range is -80.0 to 6.0206 dB. this conversion allows for a range of 1-20 and is adjusted
+        float dB = ((float) volume / 20 * 46) - 40;
         if (clip != null) {
-            // Get the volume control for the Clip object
             FloatControl volumeControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
             if (volumeControl != null) {
-                // Set the volume to the desired level
-                volumeControl.setValue(volume);
+                volumeControl.setValue(dB);
             }
         }
     }
@@ -66,9 +67,9 @@ class BackgroundMusic {
     public void promptVolume() {
         // Scanner to read the user input
         Scanner input = new Scanner(System.in);
-        System.out.print("Enter the audio level (0.0 to 1.0): ");
+        System.out.print("Enter the audio level (1 - 20 ): ");
         // Call the setVolume method with the user input as the argument
-        setVolume(input.nextFloat());
+        setVolume(input.nextInt());
     }
 
     public boolean isPlaying() {

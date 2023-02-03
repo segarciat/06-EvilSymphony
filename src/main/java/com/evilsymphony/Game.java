@@ -92,6 +92,16 @@ public class Game {
             // Process the command entered by the user.
             if(PlayerCommand.QUIT.isAliasOf(command)){
                 break;
+
+            }
+            else if (PlayerCommand.MUSIC_ON.isAliasOf(command)) {
+                handleMusicOnCommand(player);
+            }
+            else if (PlayerCommand.MUSIC_OFF.isAliasOf(command)) {
+                handleMusicOffCommand();
+            }
+            else if (PlayerCommand.MUSIC_VOL.isAliasOf(command)) {
+                handleMusicVolCommand();
             } else if (PlayerCommand.HELP.isAliasOf(command)) {
                 handleHelpCommand();
             } else if (PlayerCommand.DESCRIBE.isAliasOf(command)) {
@@ -116,6 +126,24 @@ public class Game {
 
         }
         handleQuit();
+    }
+
+    private void handleMusicVolCommand() {
+        music.promptVolume();
+    }
+
+    private void handleMusicOffCommand() {
+        if(music.isPlaying()) {
+            music.stop();
+            music.setMusicOptionIsYes(false);
+        }
+    }
+
+    private void handleMusicOnCommand(Player player) {
+        if(!music.isPlaying()) {
+            music.play(player.getCurrentLocation().getMusic());
+            music.setMusicOptionIsYes(true);
+        }
     }
 
     private void handleHelpCommand() {
