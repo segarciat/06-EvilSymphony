@@ -61,9 +61,9 @@ public class Game {
     private void startGame() {
         player = new Player();
 
-        locations = Location.loadLocations(LOCATION_FILE);
-        allNPCs = NPC.loadNPCs(NPC_FILE);
-        items = Item.loadItems(ITEM_FILE);
+        locations = JSONLoader.loadFromJsonAsMap(LOCATION_FILE, Location.class, o -> o.getName().toUpperCase());
+        allNPCs = JSONLoader.loadFromJsonAsMap(NPC_FILE, NPC.class, o -> o.getName().toUpperCase());
+        items = JSONLoader.loadFromJsonAsMap(ITEM_FILE, Item.class, o -> o.getName().toUpperCase());
 
         player.setCurrentLocation(locations.get(STARTING_LOCATION));
 
@@ -205,8 +205,8 @@ public class Game {
 
         if (!matcher.matches()) {
             System.out.println(Color.RED.setFontColor(
-                    String.format("%s ERROR: no NPC named %s in %s",
-                            PlayerCommand.TRADE, matcher.group(1), currentLocation.getName()))
+                    String.format("%s ERROR: expected NPC located at %s and an item name.",
+                            PlayerCommand.TRADE, currentLocation.getName()))
             );
             return;
         }
