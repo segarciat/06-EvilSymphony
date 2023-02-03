@@ -22,6 +22,12 @@ public class Game {
     private final TextParser parser = new TextParser();
     private final String MAP_LAYOUT = parser.loadText(MAP_FILE);
 
+    private Map<String, Location> locations;
+    private Map<String, NPC> allNPCs;
+    private Map<String, Item> items;
+
+    private Player player;
+
     /**
      * Starting point of the application.
      */
@@ -51,18 +57,20 @@ public class Game {
      * Initializes main game loop.
      */
     private void startGame() {
+        player = new Player();
 
-        Map<String, Location> locations = Location.loadLocations(LOCATION_FILE);
-        Map<String, NPC> allNPCs = NPC.loadNPCs(NPC_FILE);
-        Map<String, Item> items = Item.loadItems(ITEM_FILE);
-        Inventory inventory = new Inventory();
+        locations = Location.loadLocations(LOCATION_FILE);
+        allNPCs = NPC.loadNPCs(NPC_FILE);
+        items = Item.loadItems(ITEM_FILE);
 
-        Location currentLocation = locations.get(STARTING_LOCATION);
+        player.setCurrentLocation(locations.get(STARTING_LOCATION));
+
+        System.out.println(player.getCurrentLocation().getDescription());
 
         while (true) {
 
             // Prompt user for a command
-            displayPlayerInfo(inventory, currentLocation);
+            displayPlayerInfo();
             String userInput = parser.prompt(
                             ENTER_COMMAND_PROMPT,
                             PlayerCommand.getCommandsRegex(),
@@ -80,45 +88,132 @@ public class Game {
             if(PlayerCommand.QUIT.isAliasOf(command)){
                 break;
             } else if (PlayerCommand.HELP.isAliasOf(command)) {
-                PlayerCommand.displayHelpMenu();
+                handleHelpCommand();
             } else if (PlayerCommand.DESCRIBE.isAliasOf(command)) {
-                System.out.println(currentLocation.getDescription());
+                handleDescribeCommand();
             } else if (PlayerCommand.MAP.isAliasOf(command)){
-                displayMap(currentLocation);
-            } else if (PlayerCommand.GO.isAliasOf(command) && currentLocation.containsLocation(noun)) {
-                currentLocation = locations.get(noun);
-                System.out.println(currentLocation.getDescription());
-            } else if (PlayerCommand.TALK.isAliasOf(command) && currentLocation.containsNpc(noun)) {
-                NPC selectedNPC = allNPCs.get(noun);
-                System.out.println(selectedNPC.getDialogue());
-            } else if (PlayerCommand.DEALS.isAliasOf(command) && currentLocation.containsNpc(noun)) {
-                NPC selectedNPC = allNPCs.get(noun);
-                System.out.println(selectedNPC.getTradeDeals());
-            }
-            else if (PlayerCommand.LOOK.isAliasOf(command) && (currentLocation.containsItem(noun) || inventory.contains(noun))) {
-                Item item = items.get(noun);
-                System.out.println(item.getDescription());
-            } else if (PlayerCommand.GET.isAliasOf(command) && currentLocation.containsItem(noun)){
-                Item item = items.get(noun);
-                inventory.addItem(item);
-                currentLocation.removeItem(noun);
+                handleMapCommand();
+            } else if (PlayerCommand.GO.isAliasOf(command)) {
+                handleGoCommand(noun);
+            } else if (PlayerCommand.TALK.isAliasOf(command)) {
+                handleTalkCommand(noun);
+            } else if (PlayerCommand.DEALS.isAliasOf(command)) {
+                handleDealsCommand(noun);
+            } else if (PlayerCommand.TRADE.isAliasOf(command)) {
+                handleTrade(noun);
+            } else if (PlayerCommand.LOOK.isAliasOf(command)) {
+                handleLookCommand(noun);
+            } else if (PlayerCommand.GET.isAliasOf(command)){
+                handleGetCommand(noun);
             } else {
-                String feedback = String.format("The command %s is valid. ", command) +
-                        String.format("It is unhandled by us, or not valid with %s at the moment. Type HELP for more info.", noun) +
-                        System.lineSeparator();
-                System.out.println(Color.RED.setFontColor(feedback));
+                handleUnmatchedCommand(command);
             }
 
         }
         handleQuit();
     }
 
-    private void displayPlayerInfo(Inventory inventory, Location currentLocation) {
-        inventory.displayContents();
+    private void handleHelpCommand() {
+        PlayerCommand.displayHelpMenu();
+    }
+
+    private void handleUnmatchedCommand(String command) {
+        String feedback = String.format("The command %s is not yet supported.", command);
+        System.out.println(Color.RED.setFontColor(feedback));
+    }
+
+    private void handleGetCommand(String noun) {
+        Location currentLocation = player.getCurrentLocation();
+        if (!currentLocation.containsItem(noun)) {
+            System.out.println(Color.RED.setFontColor(
+                    String.format("%s ERROR: No item named %s in %s",
+                            PlayerCommand.GET,noun, currentLocation.getName()))
+            );
+        } else {
+            Item item = items.get(noun);
+            player.addItemToInventory(item);
+            currentLocation.removeItem(item.getName());
+        }
+    }
+
+    private void handleLookCommand(String noun) {
+        Location currentLocation = player.getCurrentLocation();
+        if (!currentLocation.containsItem(noun) && !player.has(noun)) {
+            System.out.println(Color.RED.setFontColor(
+                    String.format("%s ERROR: No item named %s in %s or in your inventory",
+                            PlayerCommand.LOOK,noun, currentLocation.getName()))
+            );
+        } else {
+            Item item = items.get(noun);
+            System.out.println(item.getDescription());
+        }
+    }
+
+    private void handleDealsCommand(String noun) {
+        Location currentLocation = player.getCurrentLocation();
+        if (!currentLocation.containsNpc(noun)) {
+            System.out.println(Color.RED.setFontColor(
+                    String.format("%s ERROR: No NPC named %s in %s",
+                            PlayerCommand.DEALS,noun, currentLocation.getName()))
+            );
+        } else {
+            NPC npc = allNPCs.get(noun);
+            System.out.println(npc.getTradeDeals());
+        }
+    }
+
+    private void handleTalkCommand(String noun) {
+        Location currentLocation = player.getCurrentLocation();
+        if (!currentLocation.containsNpc(noun)) {
+            System.out.println(Color.RED.setFontColor(
+                    String.format("%s ERROR: No NPC named %s in %s",
+                            PlayerCommand.TALK,noun, currentLocation.getName()))
+            );
+        } else {
+            NPC npc = allNPCs.get(noun);
+            System.out.println(npc.getDialogue());
+        }
+    }
+
+    private void handleGoCommand(String noun) {
+        Location currentLocation = player.getCurrentLocation();
+        if (!currentLocation.reaches(noun)) {
+            System.out.println(Color.RED.setFontColor(
+                    String.format("%s ERROR: Cannot reach %s from %s",
+                            PlayerCommand.GO,noun, currentLocation.getName()))
+            );
+        } else {
+            currentLocation = locations.get(noun);
+            player.setCurrentLocation(currentLocation);
+            System.out.println(currentLocation.getDescription());
+        }
+    }
+
+    private void handleDescribeCommand() {
+        Location currentLocation = player.getCurrentLocation();
+        System.out.println(currentLocation.getDescription());
+    }
+
+    private void handleTrade(String noun) {
+        System.out.println("Trade command was issued.");
+    }
+
+    private void displayPlayerInfo() {
+        Set<Item> inventory = player.getInventory();
+
+        // Inventory
+        StringBuilder sb = new StringBuilder("------------------- INVENTORY ---------------------\n");
+        for (Item item: inventory)
+            sb.append(String.format("\t%s%s", item.getName(), System.lineSeparator()));
+        System.out.println(Color.YELLOW.setFontColor(sb.toString()));
+
+        // Location
+        Location currentLocation = player.getCurrentLocation();
         System.out.printf("You are in: %s%s", currentLocation.getName(), System.lineSeparator());
     }
 
-    private void displayMap(Location currentLocation) {
+    private void handleMapCommand() {
+        Location currentLocation = player.getCurrentLocation();
         String s = String.format("You are in: %s%s",currentLocation.getName(), System.lineSeparator());
         System.out.println(MAP_LAYOUT);
         System.out.println(Color.GREEN.setFontColor(s));

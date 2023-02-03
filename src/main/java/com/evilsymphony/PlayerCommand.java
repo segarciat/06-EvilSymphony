@@ -13,7 +13,7 @@ public enum PlayerCommand {
     DEALS("DEALS NPC", "Displays a list of item trading deals that can be had with NPC."),
     TALK("TALK NPC", "Start a dialog with npc.", "TELL", "SPEAK TO", "CHAT"),
     REPLACE("REPLACE ITEM", "Swap with existing item.", "CHANGE", "SWAP", "EXCHANGE"),
-    TRADE("TRADE ITEM", "Trade an item with an NPC.", "BARTER"),
+    TRADE("TRADE NPC ITEM", "Obtain ITEM from NPC. If NPC expects an item in return, you lose that item if you have it.", "BARTER"),
     LOOK("LOOK ITEM", "Examine an item to get more information", "EXAMINE", "CHECK", "INSPECT"),
     PLAY("PLAY", "Start the game."),
     MAP("MAP", "Displays the current map."),
@@ -30,17 +30,16 @@ public enum PlayerCommand {
         this.aliases.add(this.toString());
     }
 
-
     /**
      * Creates a new string with a listing of available commands.
      */
     public static void displayHelpMenu() {
         StringBuilder sb = new StringBuilder("Help Menu\n");
 
-        for (PlayerCommand cmd : PlayerCommand.values()) {
+        for (PlayerCommand cmd : PlayerCommand.values())
             sb.append(String.format("%s\n\t%s\n\tAliases: %s\n", cmd.getFormat(), cmd.getHelpText(), cmd.getAliases().toString()));
-        }
-        System.out.println(sb.toString());
+
+        System.out.println(sb);
     }
 
     public boolean isAliasOf(String s){
@@ -57,7 +56,6 @@ public enum PlayerCommand {
     }
 
     public static String getCommandsRegex() {
-
         return getCommandsRegex(PlayerCommand.values());
     }
 
