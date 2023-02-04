@@ -1,8 +1,16 @@
 package com.evilsymphony;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonWriter;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Game {
 
@@ -16,35 +24,44 @@ public class Game {
 
     private static final String PLAY_OR_QUIT_PROMPT_MESSAGE = "What would you like to do?\nPlay\tQuit\n";
     private static final String INVALID_COMMAND_ENTER_PLAY_OR_QUIT = "\nInvalid Command. Please enter Play or Quit\n";
-    private static final String ENTER_COMMAND_PROMPT = "Please enter a command >";
+    private static final String ENTER_COMMAND_PROMPT = "Please enter a command or type HELP >";
     private static final String INVALID_COMMAND_TYPE_HELP = "Invalid Command. To view list of valid commands, type HELP";
 
     private static final String STARTING_LOCATION = "MAIN HALL";
+    public static final String SAVED_LOCATIONS_JSON = "savedLocations.json";
+    public static final String SAVED_NPCS_JSON = "savedNPCs.json";
+    public static final String SAVED_PLAYER_JSON = "savedPlayer.json";
 
     private final TextParser parser = new TextParser();
-    private final String MAP_LAYOUT = parser.loadText(MAP_FILE);
+    private String gameMap;
 
     private Map<String, Location> locations;
     private Map<String, NPC> allNPCs;
     private Map<String, Item> items;
 
     private Player player;
-    BackgroundMusic music = new BackgroundMusic();
+    private BackgroundMusic music = new BackgroundMusic();
+
+    CommandHandler cmdHandler = new CommandHandler(this);
 
     /**
      * Starting point of the application.
      */
     public void run() {
         clearScreen();              //Game start clear
+
+        // Load game text and splash.
         String splashText = parser.loadText(SPLASH_FILE);
         String gameSummary = parser.loadText(GAME_SUMMARY_FILE);
 
+        // Display it.
         System.out.printf("%s\n\n", splashText);
         System.out.printf("%s\n\n", gameSummary);
 
+        // Prompt player to play or quit.
         String userInput = parser.prompt(
                         PLAY_OR_QUIT_PROMPT_MESSAGE,
-                        PlayerCommand.getCommandsRegex(PlayerCommand.PLAY, PlayerCommand.QUIT),
+                        parser.getCommandsRegex(PlayerCommand.PLAY, PlayerCommand.QUIT),
                         Color.RED.setFontColor(INVALID_COMMAND_ENTER_PLAY_OR_QUIT)
                 ).toUpperCase();
 
@@ -57,15 +74,17 @@ public class Game {
     }
 
     /**
-     * Initializes main game loop.
+     * Loads game resources and runs the game loop.
      */
     private void startGame() {
+        // Load resources.
+        locations = JSONLoader.loadFromJsonAsMap(LOCATION_FILE, Location.class, o -> o.getName().toUpperCase());
+        allNPCs = JSONLoader.loadFromJsonAsMap(NPC_FILE, NPC.class, o -> o.getName().toUpperCase());
+        items = JSONLoader.loadFromJsonAsMap(ITEM_FILE, Item.class, o -> o.getName().toUpperCase());
+        gameMap = parser.loadText(MAP_FILE);
+
+        // Set up player.
         player = new Player();
-
-        locations = Location.loadLocations(LOCATION_FILE);
-        allNPCs = NPC.loadNPCs(NPC_FILE);
-        items = Item.loadItems(ITEM_FILE);
-
         player.setCurrentLocation(locations.get(STARTING_LOCATION));
 
         music.play(player.getCurrentLocation().getMusic());
@@ -74,209 +93,72 @@ public class Game {
 
         while (true) {
 
-            // Prompt user for a command
             displayPlayerInfo();
+
+            // Prompt user for a command
             String userInput = parser.prompt(
                             ENTER_COMMAND_PROMPT,
-                            PlayerCommand.getCommandsRegex(),
+                            parser.getCommandsRegex(),
                             Color.RED.setFontColor(INVALID_COMMAND_TYPE_HELP))
                     .toUpperCase();
 
             // Parse the command entered by the user.
-            String[] commandParts = parser.parseCommand(userInput);
+            List<String> commandParts = parser.parseCommand(userInput);
 
-            String command = commandParts[0];
-            String noun = commandParts[1];
+            String command = commandParts.get(0);
+            String noun = commandParts.get(1);
 
             clearScreen();
+
             // Process the command entered by the user.
-            if(PlayerCommand.QUIT.isAliasOf(command)){
+            cmdHandler.handle(command, noun);
+            if(PlayerCommand.QUIT.isAliasOf(command)) {
                 break;
-
             }
-            else if (PlayerCommand.MUSIC_ON.isAliasOf(command)) {
-                handleMusicOnCommand(player);
-            }
-            else if (PlayerCommand.MUSIC_OFF.isAliasOf(command)) {
-                handleMusicOffCommand();
-            }
-            else if (PlayerCommand.MUSIC_VOL.isAliasOf(command)) {
-                handleMusicVolCommand();
-            } else if (PlayerCommand.HELP.isAliasOf(command)) {
-                handleHelpCommand();
-            } else if (PlayerCommand.DESCRIBE.isAliasOf(command)) {
-                handleDescribeCommand();
-            } else if (PlayerCommand.MAP.isAliasOf(command)){
-                handleMapCommand();
-            } else if (PlayerCommand.GO.isAliasOf(command)) {
-                handleGoCommand(noun);
-            } else if (PlayerCommand.TALK.isAliasOf(command)) {
-                handleTalkCommand(noun);
-            } else if (PlayerCommand.DEALS.isAliasOf(command)) {
-                handleDealsCommand(noun);
-            } else if (PlayerCommand.TRADE.isAliasOf(command)) {
-                handleTrade(noun);
-            } else if (PlayerCommand.LOOK.isAliasOf(command)) {
-                handleLookCommand(noun);
-            } else if (PlayerCommand.GET.isAliasOf(command)){
-                handleGetCommand(noun);
-            } else {
-                handleUnmatchedCommand(command);
-            }
-
-        }
-        handleQuit();
-    }
-
-    private void handleMusicVolCommand() {
-        music.promptVolume();
-    }
-
-    private void handleMusicOffCommand() {
-        if(music.isPlaying()) {
-            music.stop();
-            music.setMusicOptionIsYes(false);
         }
     }
 
-    private void handleMusicOnCommand(Player player) {
-        if(!music.isPlaying()) {
-            music.play(player.getCurrentLocation().getMusic());
-            music.setMusicOptionIsYes(true);
+    /**
+     * Performs any necessary cleanup, including saving data.
+     */
+    public void handleQuit() {
+        Collection<Location> locationsColl = locations.values();
+        Collection<NPC> npcColl = allNPCs.values();
+
+        Type npcCollType = TypeToken.getParameterized(Collection.class, NPC.class).getType();
+        Type locationsCollType = TypeToken.getParameterized(Collection.class, Location.class).getType();
+        Type playerType = TypeToken.get(Player.class).getType();
+
+        saveGameData(locationsColl, locationsCollType, SAVED_LOCATIONS_JSON);
+        saveGameData(npcColl, npcCollType, SAVED_NPCS_JSON);
+        saveGameData(player, playerType, SAVED_PLAYER_JSON);
+
+        clearScreen();
+        System.out.println("Thanks for playing!");
+    }
+
+    /**
+     * Saves an object as JSON to a file.
+     *
+     * @param data Data to save to as JSON
+     * @param type Type of the data being saved.
+     * @param filename The name of the JSON file being saved to.
+     */
+    private void saveGameData(Object data, Type type, String filename) {
+        String base = Objects.requireNonNull(getClass().getClassLoader().getResource("")).getPath();
+        File file = new File(base, filename);
+        try (JsonWriter writer = new JsonWriter(new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8)))) {
+            Gson gson = new Gson();
+            gson.toJson(data, type, writer);
+        } catch(IOException e) {
+            System.out.println("Unable to save");
+            throw new RuntimeException(e);
         }
     }
 
-    private void handleHelpCommand() {
-        PlayerCommand.displayHelpMenu();
-    }
-
-    private void handleUnmatchedCommand(String command) {
-        String feedback = String.format("The command %s is not yet supported.", command);
-        System.out.println(Color.RED.setFontColor(feedback));
-    }
-
-    private void handleGetCommand(String noun) {
-        Location currentLocation = player.getCurrentLocation();
-        if (!currentLocation.containsItem(noun)) {
-            System.out.println(Color.RED.setFontColor(
-                    String.format("%s ERROR: No item named %s in %s",
-                            PlayerCommand.GET,noun, currentLocation.getName()))
-            );
-        } else {
-            Item item = items.get(noun);
-            player.addItemToInventory(item);
-            currentLocation.removeItem(item.getName());
-        }
-    }
-
-    private void handleLookCommand(String noun) {
-        Location currentLocation = player.getCurrentLocation();
-        if (!currentLocation.containsItem(noun) && !player.has(noun)) {
-            System.out.println(Color.RED.setFontColor(
-                    String.format("%s ERROR: No item named %s in %s or in your inventory",
-                            PlayerCommand.LOOK,noun, currentLocation.getName()))
-            );
-        } else {
-            Item item = items.get(noun);
-            System.out.println(item.getDescription());
-        }
-    }
-
-    private void handleDealsCommand(String noun) {
-        Location currentLocation = player.getCurrentLocation();
-        if (!currentLocation.containsNpc(noun)) {
-            System.out.println(Color.RED.setFontColor(
-                    String.format("%s ERROR: No NPC named %s in %s",
-                            PlayerCommand.DEALS,noun, currentLocation.getName()))
-            );
-        } else {
-            NPC npc = allNPCs.get(noun);
-            System.out.println(npc.getTradeDeals());
-        }
-    }
-
-    private void handleTalkCommand(String noun) {
-        Location currentLocation = player.getCurrentLocation();
-        if (!currentLocation.containsNpc(noun)) {
-            System.out.println(Color.RED.setFontColor(
-                    String.format("%s ERROR: No NPC named %s in %s",
-                            PlayerCommand.TALK,noun, currentLocation.getName()))
-            );
-        } else {
-            NPC npc = allNPCs.get(noun);
-            System.out.println(npc.getDialogue());
-        }
-    }
-
-    private void handleGoCommand(String noun) {
-        Location currentLocation = player.getCurrentLocation();
-        if (!currentLocation.reaches(noun)) {
-            System.out.println(Color.RED.setFontColor(
-                    String.format("%s ERROR: Cannot reach %s from %s",
-                            PlayerCommand.GO,noun, currentLocation.getName()))
-            );
-        } else {
-            if (music.isPlaying()) music.stop();
-            currentLocation = locations.get(noun);
-            player.setCurrentLocation(currentLocation);
-            if (music.MusicOptionIsYes()) music.play(currentLocation.getMusic());
-            System.out.println(currentLocation.getDescription());
-        }
-    }
-
-    private void handleDescribeCommand() {
-        Location currentLocation = player.getCurrentLocation();
-        System.out.println(currentLocation.getDescription());
-    }
-
-    private void handleTrade(String noun) {
-        Location currentLocation = player.getCurrentLocation();
-        String npcRegex = String.format("(?i)(%s)\\s+(.+)",
-                String.join("|", currentLocation.getNPCs()));
-        Pattern pattern = Pattern.compile(npcRegex);
-        Matcher matcher = pattern.matcher(noun);
-
-        if (!matcher.matches()) {
-            System.out.println(Color.RED.setFontColor(
-                    String.format("%s ERROR: no NPC named %s in %s",
-                            PlayerCommand.TRADE, matcher.group(1), currentLocation.getName()))
-            );
-            return;
-        }
-
-        NPC npc = allNPCs.get(matcher.group(1));
-        String itemPlayerWants = matcher.group(2);
-        if (!npc.has(itemPlayerWants)) {
-            System.out.println(Color.RED.setFontColor(
-                    String.format("%s ERROR: NPC named %s does not have item named %s",
-                            PlayerCommand.TRADE, npc.getName(), itemPlayerWants))
-            );
-            return;
-        }
-
-        String itemExpectedByNPC = npc.expectsWhenTrade(itemPlayerWants).toUpperCase();
-        if (!itemExpectedByNPC.isEmpty() && !player.has(itemExpectedByNPC)) {
-            System.out.println(Color.RED.setFontColor(
-                    String.format("%s ERROR: NPC named %s expects %s in exchange for %s, but you do not have it.",
-                            PlayerCommand.TRADE, npc.getName(), itemExpectedByNPC, itemPlayerWants))
-            );
-            return;
-        }
-
-        Item item = items.get(itemPlayerWants);
-        String tradeText = npc.removeItem(item.getName());
-        System.out.println(tradeText);
-
-        if (!itemExpectedByNPC.isEmpty()) {
-            player.removeItemFromInventory(items.get(itemExpectedByNPC));
-            System.out.printf("You have lost: %s%s", itemExpectedByNPC, System.lineSeparator());
-        }
-
-        player.addItemToInventory(item);
-        System.out.println("You have gained: " + itemPlayerWants);
-
-    }
-
+    /**
+     * Displays information pertinent to the player's state.
+     */
     private void displayPlayerInfo() {
         Set<Item> inventory = player.getInventory();
 
@@ -289,21 +171,6 @@ public class Game {
         // Location
         Location currentLocation = player.getCurrentLocation();
         System.out.printf("You are in: %s%s", currentLocation.getName(), System.lineSeparator());
-    }
-
-    private void handleMapCommand() {
-        Location currentLocation = player.getCurrentLocation();
-        String s = String.format("You are in: %s%s",currentLocation.getName(), System.lineSeparator());
-        System.out.println(MAP_LAYOUT);
-        System.out.println(Color.GREEN.setFontColor(s));
-    }
-
-    /**
-     * Performs any necessary cleanup and or closes files.
-     */
-    private void handleQuit() {
-        clearScreen();
-        System.out.println("Thanks for playing!");
     }
 
     /**
@@ -329,4 +196,32 @@ public class Game {
         }
     }
 
+    // Accessor methods.
+    public Map<String, Location> getLocations() {
+        return locations;
+    }
+
+    public Map<String, NPC> getAllNPCs() {
+        return allNPCs;
+    }
+
+    public Map<String, Item> getItems() {
+        return items;
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public String getGameMap() {
+        return gameMap;
+    }
+
+    public TextParser getParser() {
+        return parser;
+    }
+
+    public BackgroundMusic getMusic() {
+        return music;
+    }
 }

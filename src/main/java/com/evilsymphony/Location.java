@@ -1,14 +1,6 @@
 package com.evilsymphony;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-
-import java.io.*;
-import java.lang.reflect.Type;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 
@@ -33,7 +25,6 @@ class Location {
     }
 
     // business methods
-
     public String getDescription() {
 
         StringBuilder sb = new StringBuilder();
@@ -57,24 +48,6 @@ class Location {
 
         return sb.toString();
     }
-
-
-
-    public static Map<String, Location> loadLocations(String jsonFile) {
-
-
-        try (Reader reader = new InputStreamReader(Objects.requireNonNull(Location.class.getClassLoader().getResourceAsStream(jsonFile)))) {
-            Type locationListType = new TypeToken<List<Location>>() {}.getType();
-            Gson gson = new Gson();
-            List<Location> locationList = gson.fromJson(reader, locationListType);
-            return locationList.stream().collect(Collectors.toMap(loc -> loc.getName().toUpperCase(), loc -> loc ));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-    }
-
-    // business methods
 
     /**
      * Determines noun is a location name that can be reached from this location.

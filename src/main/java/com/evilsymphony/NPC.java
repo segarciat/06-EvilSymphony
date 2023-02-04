@@ -1,13 +1,7 @@
 package com.evilsymphony;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import java.io.*;
-import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class NPC {
@@ -28,18 +22,6 @@ public class NPC {
         this(npc.getName(), npc.dialogue, npc.items);
     }
 
-    public static Map<String, NPC> loadNPCs(String jsonFile) {
-        try (Reader reader = new InputStreamReader(Objects.requireNonNull(NPC.class.getClassLoader().getResourceAsStream(jsonFile)))) {
-            Type npcListType = new TypeToken<List<NPC>>() {}.getType();
-            Gson gson = new Gson();
-            List<NPC> npcList = gson.fromJson(reader, npcListType);
-            npcList = npcList.stream().map(NPC::new).collect(Collectors.toList());
-            return npcList.stream().collect(Collectors.toMap(npc -> npc.getName().toUpperCase(), npc -> npc));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public  String getDialogue() {
         if (dialogue == null || dialogue.isEmpty()) {
             return "";
@@ -53,6 +35,10 @@ public class NPC {
     // getters
     public String getName() {
         return name;
+    }
+
+    private String getMatchingKeyCaseInsensitive(String key) {
+        return items.keySet().stream().filter(itemName -> itemName.equalsIgnoreCase(key)).findFirst().orElse(null);
     }
 
     public String getTradeDeals() {
@@ -74,13 +60,12 @@ public class NPC {
     }
 
     public boolean has(String s) {
-        return items != null && items.keySet().stream().anyMatch(itemName -> itemName.equalsIgnoreCase(s));
+        return getMatchingKeyCaseInsensitive(s) != null;
     }
 
     public String expectsWhenTrade(String itemPlayerWants) {
-        if (!has(itemPlayerWants))
-            return "";
-        return items.get(itemPlayerWants).getOrDefault("expects", "");
+        String itemKey = getMatchingKeyCaseInsensitive(itemPlayerWants);
+        return items.get(itemKey).getOrDefault("expects", "");
     }
 
     /**
@@ -89,17 +74,12 @@ public class NPC {
      * @return Text that NPC says during trade.
      */
     public String removeItem(String itemName) {
-        var itemEntry = items == null?
-                null:
-                items.entrySet().stream()
-                .filter(e -> e.getKey().equalsIgnoreCase(itemName))
-                .findFirst()
-                .orElse(null);
+        String itemKey = getMatchingKeyCaseInsensitive(itemName);
 
-        if (itemEntry == null)
+        if (itemKey == null)
             return "";
 
-        items.remove(itemEntry.getKey());
-        return String.format("%s: %s", getName(), itemEntry.getValue().get("tradeText"));
+        Map<String, String> tradeDetails = items.remove(itemKey);
+        return String.format("%s: %s", getName(), tradeDetails.get("tradeText"));
     }
 }
