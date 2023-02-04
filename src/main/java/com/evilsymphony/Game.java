@@ -40,7 +40,7 @@ public class Game {
     private Map<String, Item> items;
 
     private Player player;
-    BackgroundMusic music = new BackgroundMusic();
+    private BackgroundMusic music = new BackgroundMusic();
 
     CommandHandler cmdHandler = new CommandHandler(this);
 
@@ -114,60 +114,8 @@ public class Game {
             cmdHandler.handle(command, noun);
             if(PlayerCommand.QUIT.isAliasOf(command)) {
                 break;
-
-            }
-            else if (PlayerCommand.MUSIC_ON.isAliasOf(command)) {
-                handleMusicOnCommand(player);
-            }
-            else if (PlayerCommand.MUSIC_OFF.isAliasOf(command)) {
-                handleMusicOffCommand();
-            }
-            else if (PlayerCommand.MUSIC_VOL.isAliasOf(command)) {
-                handleMusicVolCommand();
-            } else if (PlayerCommand.HELP.isAliasOf(command)) {
-                handleHelpCommand();
-            } else if (PlayerCommand.DESCRIBE.isAliasOf(command)) {
-                handleDescribeCommand();
-            } else if (PlayerCommand.MAP.isAliasOf(command)){
-                handleMapCommand();
-            } else if (PlayerCommand.GO.isAliasOf(command)) {
-                handleGoCommand(noun);
-            } else if (PlayerCommand.TALK.isAliasOf(command)) {
-                handleTalkCommand(noun);
-            } else if (PlayerCommand.DEALS.isAliasOf(command)) {
-                handleDealsCommand(noun);
-            } else if (PlayerCommand.TRADE.isAliasOf(command)) {
-                handleTrade(noun);
-            } else if (PlayerCommand.LOOK.isAliasOf(command)) {
-                handleLookCommand(noun);
-            } else if (PlayerCommand.GET.isAliasOf(command)){
-                handleGetCommand(noun);
-            } else {
-                handleUnmatchedCommand(command);
             }
         }
-    }
-
-    private void handleMusicVolCommand() {
-        music.promptVolume();
-    }
-
-    private void handleMusicOffCommand() {
-        if(music.isPlaying()) {
-            music.stop();
-            music.setMusicOptionIsYes(false);
-        }
-    }
-
-    private void handleMusicOnCommand(Player player) {
-        if(!music.isPlaying()) {
-            music.play(player.getCurrentLocation().getMusic());
-            music.setMusicOptionIsYes(true);
-        }
-    }
-
-    private void handleHelpCommand() {
-        PlayerCommand.displayHelpMenu();
     }
 
     /**
@@ -189,19 +137,6 @@ public class Game {
         System.out.println("Thanks for playing!");
     }
 
-    private void handleGoCommand(String noun) {
-        Location currentLocation = player.getCurrentLocation();
-        if (!currentLocation.reaches(noun)) {
-            System.out.println(Color.RED.setFontColor(
-                    String.format("%s ERROR: Cannot reach %s from %s",
-                            PlayerCommand.GO,noun, currentLocation.getName()))
-            );
-        } else {
-            if (music.isPlaying()) music.stop();
-            currentLocation = locations.get(noun);
-            player.setCurrentLocation(currentLocation);
-            if (music.MusicOptionIsYes()) music.play(currentLocation.getMusic());
-            System.out.println(currentLocation.getDescription());
     /**
      * Saves an object as JSON to a file.
      *
@@ -284,5 +219,9 @@ public class Game {
 
     public TextParser getParser() {
         return parser;
+    }
+
+    public BackgroundMusic getMusic() {
+        return music;
     }
 }

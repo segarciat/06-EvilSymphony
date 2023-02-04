@@ -8,7 +8,6 @@ class CommandHandler {
     public CommandHandler(Game game) {
         this.game = game;
     }
-
     public void handle(String command, String noun) {
         if (PlayerCommand.QUIT.isAliasOf(command)) {
           game.handleQuit();
@@ -30,8 +29,32 @@ class CommandHandler {
             handleLookCommand(noun);
         } else if (PlayerCommand.GET.isAliasOf(command)){
             handleGetCommand(noun);
+        } else if (PlayerCommand.MUSIC_ON.isAliasOf(command)) {
+            handleMusicOnCommand();
+        } else if (PlayerCommand.MUSIC_OFF.isAliasOf(command)) {
+            handleMusicOffCommand();
+        } else if (PlayerCommand.MUSIC_VOL.isAliasOf(command)) {
+            handleMusicVolCommand();
         } else {
             handleUnmatchedCommand(command);
+        }
+    }
+
+    private void handleMusicVolCommand() {
+        game.getMusic().promptVolume();
+    }
+
+    private void handleMusicOffCommand() {
+        if(game.getMusic().isPlaying()) {
+            game.getMusic().stop();
+            game.getMusic().setMusicOptionIsYes(false);
+        }
+    }
+
+    private void handleMusicOnCommand() {
+        if(!game.getMusic().isPlaying()) {
+            game.getMusic().play(game.getPlayer().getCurrentLocation().getMusic());
+            game.getMusic().setMusicOptionIsYes(true);
         }
     }
 
@@ -110,11 +133,13 @@ class CommandHandler {
         if (!currentLocation.reaches(noun)) {
             System.out.println(Color.RED.setFontColor(
                     String.format("%s ERROR: Cannot reach %s from %s",
-                            PlayerCommand.GO,noun, currentLocation.getName()))
+                            PlayerCommand.GO, noun, currentLocation.getName()))
             );
         } else {
+            if (game.getMusic().isPlaying()) game.getMusic().stop();
             currentLocation = game.getLocations().get(noun);
             game.getPlayer().setCurrentLocation(currentLocation);
+            if (game.getMusic().MusicOptionIsYes()) game.getMusic().play(currentLocation.getMusic());
             System.out.println(currentLocation.getDescription());
         }
     }
