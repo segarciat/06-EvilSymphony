@@ -11,7 +11,7 @@ class CommandHandler {
 
     public void handle(String command, String noun) {
         if (PlayerCommand.QUIT.isAliasOf(command)) {
-          handleQuit();
+          game.handleQuit();
         } else if (PlayerCommand.HELP.isAliasOf(command)) {
             handleHelpCommand();
         } else if (PlayerCommand.DESCRIBE.isAliasOf(command)) {
@@ -173,12 +173,5 @@ class CommandHandler {
         String s = String.format("You are in: %s%s",currentLocation.getName(), System.lineSeparator());
         System.out.println(game.getGameMap());
         System.out.println(Color.GREEN.setFontColor(s));
-    }
-
-    /**
-     * Performs any necessary cleanup and or closes files.
-     */
-    public void handleQuit() {
-        System.out.println("Thanks for playing!");
     }
 }

@@ -1,5 +1,15 @@
 package com.evilsymphony;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonWriter;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class Game {
@@ -18,6 +28,9 @@ public class Game {
     private static final String INVALID_COMMAND_TYPE_HELP = "Invalid Command. To view list of valid commands, type HELP";
 
     private static final String STARTING_LOCATION = "MAIN HALL";
+    public static final String SAVED_LOCATIONS_JSON = "savedLocations.json";
+    public static final String SAVED_NPCS_JSON = "savedNPCs.json";
+    public static final String SAVED_PLAYER_JSON = "savedPlayer.json";
 
     private final TextParser parser = new TextParser();
     private String gameMap;
@@ -52,7 +65,7 @@ public class Game {
                 ).toUpperCase();
 
         if (userInput.equals(PlayerCommand.QUIT.toString())) {
-            cmdHandler.handleQuit();
+            handleQuit();
         } else if (userInput.equals(PlayerCommand.PLAY.toString())) {
             clearScreen();
             startGame();
@@ -95,9 +108,46 @@ public class Game {
             // Process the command entered by the user.
             cmdHandler.handle(command, noun);
             if(PlayerCommand.QUIT.isAliasOf(command)) {
-                clearScreen();
                 break;
             }
+        }
+    }
+
+    /**
+     * Performs any necessary cleanup, including saving data.
+     */
+    public void handleQuit() {
+        Collection<Location> locationsColl = locations.values();
+        Collection<NPC> npcColl = allNPCs.values();
+
+        Type npcCollType = TypeToken.getParameterized(Collection.class, NPC.class).getType();
+        Type locationsCollType = TypeToken.getParameterized(Collection.class, Location.class).getType();
+        Type playerType = TypeToken.get(Player.class).getType();
+
+        saveGameData(locationsColl, locationsCollType, SAVED_LOCATIONS_JSON);
+        saveGameData(npcColl, npcCollType, SAVED_NPCS_JSON);
+        saveGameData(player, playerType, SAVED_PLAYER_JSON);
+
+        clearScreen();
+        System.out.println("Thanks for playing!");
+    }
+
+    /**
+     * Saves an object as JSON to a file.
+     *
+     * @param data Data to save to as JSON
+     * @param type Type of the data being saved.
+     * @param filename The name of the JSON file being saved to.
+     */
+    private void saveGameData(Object data, Type type, String filename) {
+        String base = Objects.requireNonNull(getClass().getClassLoader().getResource("")).getPath();
+        File file = new File(base, filename);
+        try (JsonWriter writer = new JsonWriter(new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8)))) {
+            Gson gson = new Gson();
+            gson.toJson(data, type, writer);
+        } catch(IOException e) {
+            System.out.println("Unable to save");
+            throw new RuntimeException(e);
         }
     }
 
