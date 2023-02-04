@@ -15,7 +15,10 @@ public enum PlayerCommand {
     LOOK("LOOK ITEM", "Examine an item to get more information", "EXAMINE", "CHECK", "INSPECT"),
     PLAY("PLAY", "Start the game."),
     MAP("MAP", "Displays the current map."),
-    DESCRIBE("DESCRIBE", "Describes the room the player is currently in.");
+    DESCRIBE("DESCRIBE", "Describes the room the player is currently in."),
+    MUSIC_ON("MUSIC ON", "Turns on background music"),
+    MUSIC_OFF("MUSIC OFF", "Turns off background music"),
+    MUSIC_VOL("MUSIC VOL", "Turns on background music");
 
     private final String format;
     private final String helpText;
@@ -25,7 +28,7 @@ public enum PlayerCommand {
         this.format = format;
         this.helpText = helpText;
         this.aliases = new HashSet<>(Set.of(aliases));
-        this.aliases.add(this.toString());
+        this.aliases.add(this.toString().replaceAll("_"," "));
     }
 
     public boolean isAliasOf(String s){

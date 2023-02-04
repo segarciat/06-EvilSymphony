@@ -8,7 +8,8 @@
       "Info Booth",
       "VIP Lounge",
       "Stage"
-    ]
+    ],
+    "music": "mainHallSong.wav"
   },
 
   {
@@ -18,7 +19,8 @@
     "items" : ["Vocabulary Book"],
     "directions": [
       "Main Hall"
-    ]
+    ],
+    "music": "infoBoothSong.wav"
   },
 
   {
@@ -30,7 +32,8 @@
       "Backstage",
       "VIP Lounge",
       "Bathroom"
-    ]
+    ],
+    "music": "stageSong.wav"
   },
 
   {
@@ -45,7 +48,8 @@
       "Band Dressing Room",
       "Friends Dressing Room",
       "Stage"
-    ]
+    ],
+    "music": "backstageSong.wav"
   },
 
   {
@@ -58,7 +62,8 @@
       "Backstage",
       "VIP Lounge",
       "Bar"
-    ]
+    ],
+    "music": "bathroomSong.wav"
   },
 
   {
@@ -68,7 +73,8 @@
     "items" : ["Hair Gel"],
     "directions": [
       "Backstage"
-    ]
+    ],
+    "music": "bandDressingRoomSong.wav"
   },
 
   {
@@ -78,7 +84,8 @@
     "items" : ["Microphone"],
     "directions": [
       "Backstage"
-    ]
+    ],
+    "music": "friendsDressingRoomSong.wav"
   },
 
   {
@@ -89,7 +96,8 @@
     "directions": [
       "Backstage",
       "Bathroom"
-    ]
+    ],
+    "music": "barSong.wav"
   },
   {
     "name": "VIP Lounge",
@@ -100,7 +108,8 @@
       "Main Hall",
       "Stage",
       "Backstage"
-    ]
+    ],
+    "music": "vipLoungeSong.wav"
   }
 
 ]
