@@ -72,6 +72,30 @@
     ]
   },
   {
+    "name": "Jay",
+    "dialogue": [
+      "Do you actually need a guitar to play guitar?",
+      "BooooYahhhhhhh",
+      "Tonight the stage is mine!"
+    ]
+  },
+  {
+    "name": "Diana",
+    "dialogue": [
+      "It looks like a flat toothpick and I cant seem to find it!",
+      "Im so glad you're here to help your friend, hes lucky to have you.",
+      "Please don't tell your friend I was here. Im just looking for it, nothing else!"
+    ]
+  },
+  {
+    "name": "Diva",
+    "dialogue": [
+      "I have more grammys than I have fingers.",
+      "Im only here to see whats all the fuss about, nothing more.",
+      "The bartender creeps me out!"
+    ]
+  },
+  {
     "name": "Director",
     "dialogue": [
       "I wonder if the instruments will be fixed in time...",
