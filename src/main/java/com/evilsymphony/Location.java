@@ -95,6 +95,6 @@ public class Location {
     }
 
     public String getMusic() {
-        return String.format("music/%s",music);
+        return this.music;
     }
 }

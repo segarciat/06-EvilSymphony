@@ -50,9 +50,7 @@ public class JSONLoader {
     }
 
     public static boolean exists(String filename) {
-        String base = Objects.requireNonNull(JSONLoader.class.getClassLoader().getResource("")).getPath();
-        File file = new File(base, filename);
-        return Files.exists(file.toPath());
+        return JSONLoader.class.getClassLoader().getResource(filename) != null;
     }
 
     public static Player loadPlayerFromJson(String savedPlayerJson) {
