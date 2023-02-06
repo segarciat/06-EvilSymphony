@@ -39,8 +39,8 @@ public class CommandHandler {
             handleMusicOffCommand();
         } else if (PlayerCommand.MUSIC_VOL.isAliasOf(command)) {
             handleMusicVolCommand();
-        } else if (PlayerCommand.SAVE.isAliasOf(command)) {
-            handleSaveCommand();
+//        } else if (PlayerCommand.SAVE.isAliasOf(command)) {
+//            handleSaveCommand();
         } else {
             handleUnmatchedCommand(command);
         }
