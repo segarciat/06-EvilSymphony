@@ -1,36 +1,30 @@
 package com.evilsymphony;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-
-import java.io.*;
-import java.lang.reflect.Type;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 
-class Location {
+public class Location {
     private final String name;
     private final String welcomeMessage;
     private final List<String> NPCs;
     private List<String> items;
     private final List<String> directions;
+    private final String music;
 
-    public Location(String name, String welcomeMessage, List<String> NPCs, List<String> items, List<String> directions) {
+
+    public Location(String name, String welcomeMessage, List<String> NPCs, List<String> items, List<String> directions,String music) {
         // update later
         this.name = name;
         this.welcomeMessage = welcomeMessage;
         this.NPCs = NPCs;
         this.items = items;
         this.directions = directions;
+        this.music = music;
 
     }
 
     // business methods
-
     public String getDescription() {
 
         StringBuilder sb = new StringBuilder();
@@ -55,25 +49,13 @@ class Location {
         return sb.toString();
     }
 
-
-
-    public static Map<String, Location> loadLocations(String jsonFile) {
-
-
-        try (Reader reader = new InputStreamReader(Objects.requireNonNull(Location.class.getClassLoader().getResourceAsStream(jsonFile)))) {
-            Type locationListType = new TypeToken<List<Location>>() {}.getType();
-            Gson gson = new Gson();
-            List<Location> locationList = gson.fromJson(reader, locationListType);
-            return locationList.stream().collect(Collectors.toMap(loc -> loc.getName().toUpperCase(), loc -> loc ));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-    }
-
-    // business methods
-
-    public boolean containsLocation(String noun) {
+    /**
+     * Determines noun is a location name that can be reached from this location.
+     *
+     * @param noun String that could be the name of a location.
+     * @return Whether noun is a location name that can be reached from this location.
+     */
+    public boolean reaches(String noun) {
         return containsNounCaseInsensitive(directions, noun);
     }
 
@@ -112,11 +94,7 @@ class Location {
         return NPCs;
     }
 
-    public List<String> getItems() {
-        return items;
-    }
-
-    public List<String> getDirections() {
-        return directions;
+    public String getMusic() {
+        return String.format("music/%s",music);
     }
 }

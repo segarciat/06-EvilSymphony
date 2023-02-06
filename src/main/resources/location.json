@@ -1,105 +1,114 @@
 [
   {
-    "name": "Music Hall",
-    "welcomeMessage": "Welcome to the show dont forget to check the info stand",
+    "name": "Main Hall",
+    "welcomeMessage": "The room appears calm, except for workers setting up an event...",
     "NPCs": ["Security Guard"],
     "items" : [],
     "directions": [
       "Info Booth",
-      "Vip Lounge",
+      "VIP Lounge",
       "Stage"
-    ]
+    ],
+    "music": "mainHallSong.wav"
   },
 
   {
     "name": "Info Booth",
-    "welcomeMessage": "It looks like theres a phone in here too",
-    "NPCs": ["Usher"],
+    "welcomeMessage": "The room has helpful clerks, a phone, and other resources.",
+    "NPCs": ["Friend"],
     "items" : ["Vocabulary Book"],
     "directions": [
-      "Music Hall"
-    ]
+      "Main Hall"
+    ],
+    "music": "infoBoothSong.wav"
   },
 
   {
     "name": "Stage",
-    "welcomeMessage": "Wow all of these cool instruments",
-    "NPCs": ["Director"],
+    "welcomeMessage": "You stand in a stage that is empty, apart from some music instruments.",
+    "NPCs": ["Director","Security Guard"],
     "items" : [],
     "directions": [
       "Backstage",
-      "Vip Lounge",
+      "VIP Lounge",
       "Bathroom"
-    ]
+    ],
+    "music": "stageSong.wav"
   },
 
   {
     "name": "Backstage",
-    "welcomeMessage": "Ive never been back stage is cool",
-    "NPCs": ["Security Guard","Rocky"],
+    "welcomeMessage": "There are many other VIP fans peeking around... not as exciting as you imagined.",
+    "NPCs": ["Rocky","Security Guard"],
     "items" : [],
     "directions": [
-      "Vip Lounge",
+      "VIP Lounge",
       "Bathroom",
       "Bar",
       "Band Dressing Room",
-      "Friends Dressing Room"
-    ]
+      "Friends Dressing Room",
+      "Stage"
+    ],
+    "music": "backstageSong.wav"
   },
 
   {
     "name": "Bathroom",
-    "welcomeMessage": "Whats that smell",
-    "NPCs": [],
-    "items" : ["Tuner"],
+    "welcomeMessage": "The smell here reminds you of your humanity.",
+    "NPCs": ["Jay"],
+    "items" : ["Guitar Tuner"],
     "directions": [
       "Stage",
       "Backstage",
-      "Vip Lounge",
       "Bar"
-    ]
+    ],
+    "music": "bathroomSong.wav"
   },
 
   {
     "name": "Band Dressing Room",
-    "welcomeMessage": "Kinda small for 5 people",
-    "NPCs": [],
+    "welcomeMessage": "A mirror, two seats, and ward robe. Does a whole band really prepare here?",
+    "NPCs": ["Larry"],
     "items" : ["Hair Gel"],
     "directions": [
       "Backstage"
-    ]
+    ],
+    "music": "bandDressingRoomSong.wav"
   },
 
   {
     "name": "Friends Dressing Room",
-    "welcomeMessage": "Whoa!",
-    "NPCs": [],
+    "welcomeMessage": "Smaller than the band dressing room, but considering it's for a single person, it's impressive.",
+    "NPCs": ["Diana"],
     "items" : ["Microphone"],
     "directions": [
       "Backstage"
-    ]
+    ],
+    "music": "friendsDressingRoomSong.wav"
   },
 
   {
     "name": "Bar",
-    "welcomeMessage": "is that johnny!",
-    "NPCs": ["Johnny"],
+    "welcomeMessage": "Cleaner than the bathroom, and plenty of seats and snacks available.",
+    "NPCs": ["Johnny","Diva"],
     "items" : [],
     "directions": [
       "Backstage",
       "Bathroom"
-    ]
+    ],
+    "music": "barSong.wav"
   },
   {
-    "name": "Vip Lounge",
-    "welcomeMessage": "Welcome our precious VIP member",
-    "NPCs": [],
-    "items" : ["Drum Sticks", "Autograph"],
+    "name": "VIP Lounge",
+    "welcomeMessage": "Music is playing; you sense they are trying to excite people.",
+    "NPCs": ["Suzy"],
+    "items" : [],
     "directions": [
-      "Music Hall",
+      "Main Hall",
       "Stage",
       "Backstage"
-    ]
+    ],
+    "music": "vipLoungeSong.wav"
   }
 
 ]

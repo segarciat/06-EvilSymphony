@@ -47,7 +47,7 @@
         "tradeText": "Here's the ticket I promised. You should be able to get into the VIP Lounge with it.",
         "tradeLocation": "Info Booth"
       },
-      "Key": {
+      "Door Key": {
         "tradeText": "Here's the key to my dressing room. Please don't trash it..."
       }
     }
@@ -72,8 +72,32 @@
     ]
   },
   {
+    "name": "Jay",
+    "dialogue": [
+      "Do you actually need a guitar to play guitar?",
+      "BooooYahhhhhhh",
+      "Tonight the stage is mine!"
+    ]
+  },
+  {
+    "name": "Diana",
+    "dialogue": [
+      "It looks like a flat toothpick and I cant seem to find it!",
+      "Im so glad you're here to help your friend, hes lucky to have you.",
+      "Please don't tell your friend I was here. Im just looking for it, nothing else!"
+    ]
+  },
+  {
+    "name": "Diva",
+    "dialogue": [
+      "I have more grammys than I have fingers.",
+      "Im only here to see whats all the fuss about, nothing more.",
+      "The bartender creeps me out!"
+    ]
+  },
+  {
     "name": "Director",
-    "dialog": [
+    "dialogue": [
       "I wonder if the instruments will be fixed in time...",
       "Hi, I'm the Director of this venue. Hoping you can enjoy the show later today."
     ]

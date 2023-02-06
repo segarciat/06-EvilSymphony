@@ -1,14 +1,7 @@
 package com.evilsymphony;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import java.io.*;
-import java.lang.reflect.Type;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class NPC {
@@ -19,21 +12,15 @@ public class NPC {
     public NPC(String name, List<String> dialogue, Map<String, Map<String, String>> items) {
         this.name = name;
         this.dialogue = dialogue;
-        this.items = items;
+        this.items = items == null? null: items.entrySet().stream()
+                .collect(Collectors.toMap(e -> e.getKey().toUpperCase(),
+                        Map.Entry::getValue)
+                );
     }
 
-    public static Map<String, NPC> loadNPCs(String jsonFile) {
-        try (Reader reader = new InputStreamReader(Objects.requireNonNull(NPC.class.getClassLoader().getResourceAsStream(jsonFile)))) {
-            Type npcListType = new TypeToken<List<NPC>>() {}.getType();
-            Gson gson = new Gson();
-            List<NPC> npcList = gson.fromJson(reader, npcListType);
-            return npcList.stream().collect(Collectors.toMap(npc -> npc.getName().toUpperCase(), npc -> npc));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public NPC(NPC npc) {
+        this(npc.getName(), npc.dialogue, npc.items);
     }
-
-// Task 629: Change the implementation of the instance method called getDialogue() in the NPC class so that it returns a single, random String from the list
 
     public  String getDialogue() {
         if (dialogue == null || dialogue.isEmpty()) {
@@ -41,14 +28,58 @@ public class NPC {
         }else {
             int listSize = dialogue.size();
             int randomDialogIndex = (int) (Math.random() * listSize);
-            return dialogue.get(randomDialogIndex);
+            return String.format("%s: %s", getName(), dialogue.get(randomDialogIndex));
         }
-
-
     }
-    // getters
 
+    // getters
     public String getName() {
         return name;
+    }
+
+    private String getMatchingKeyCaseInsensitive(String key) {
+        return items.keySet().stream().filter(itemName -> itemName.equalsIgnoreCase(key)).findFirst().orElse(null);
+    }
+
+    public String getTradeDeals() {
+        StringBuilder sb = new StringBuilder(String.format("-------------Trade Deals for NPC: %s-----------", getName()))
+                .append(System.lineSeparator());
+
+        // items can be null if an NPC has no "items" attribute (because they don't own items)
+        if (items == null || items.isEmpty())
+            return sb.append("NO DEALS AVAILABLE").toString();
+
+        for (var item: items.entrySet()) {
+            String itemName = item.getKey();
+            String expects = item.getValue().getOrDefault("expects", "NOTHING");
+            sb.append(String.format("Item: %s%sEXPECTS: %s%s%s",
+                    itemName, System.lineSeparator(), expects, System.lineSeparator(), System.lineSeparator()));
+        }
+
+        return sb.toString();
+    }
+
+    public boolean has(String s) {
+        return getMatchingKeyCaseInsensitive(s) != null;
+    }
+
+    public String expectsWhenTrade(String itemPlayerWants) {
+        String itemKey = getMatchingKeyCaseInsensitive(itemPlayerWants);
+        return items.get(itemKey).getOrDefault("expects", "");
+    }
+
+    /**
+     * Takes item away from NPC if it matches itemName exactly, and returns trade text said by NPC.
+     * @param itemName Item to be removed from NPC.
+     * @return Text that NPC says during trade.
+     */
+    public String removeItem(String itemName) {
+        String itemKey = getMatchingKeyCaseInsensitive(itemName);
+
+        if (itemKey == null)
+            return "";
+
+        Map<String, String> tradeDetails = items.remove(itemKey);
+        return String.format("%s: %s", getName(), tradeDetails.get("tradeText"));
     }
 }
