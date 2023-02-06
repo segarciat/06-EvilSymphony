@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-class Player {
+public class Player {
     private Location currentLocation;
     private final Set<Item> inventory = new HashSet<>();
 

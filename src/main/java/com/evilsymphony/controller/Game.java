@@ -1,5 +1,7 @@
-package com.evilsymphony;
+package com.evilsymphony.controller;
 
+import com.evilsymphony.*;
+import com.evilsymphony.util.*;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonWriter;

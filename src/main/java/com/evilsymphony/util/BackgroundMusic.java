@@ -1,11 +1,13 @@
-package com.evilsymphony;
+package com.evilsymphony.util;
+
+import com.evilsymphony.util.TextParser;
 
 import javax.sound.sampled.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Scanner;
 
-class BackgroundMusic {
+public class BackgroundMusic {
     // Clip object to play the audio file. The audio data is stored in a Clip object as a series of samples
     private Clip clip;
     public boolean isPlaying = false;
