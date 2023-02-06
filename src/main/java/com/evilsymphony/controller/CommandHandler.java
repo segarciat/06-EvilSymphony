@@ -17,8 +17,6 @@ public class CommandHandler {
           game.handleQuit();
         } else if (PlayerCommand.HELP.isAliasOf(command)) {
             handleHelpCommand();
-        } else if (PlayerCommand.DESCRIBE.isAliasOf(command)) {
-            handleDescribeCommand();
         } else if (PlayerCommand.MAP.isAliasOf(command)){
             handleMapCommand();
         } else if (PlayerCommand.GO.isAliasOf(command)) {
@@ -39,8 +37,8 @@ public class CommandHandler {
             handleMusicOffCommand();
         } else if (PlayerCommand.MUSIC_VOL.isAliasOf(command)) {
             handleMusicVolCommand();
-//        } else if (PlayerCommand.SAVE.isAliasOf(command)) {
-//            handleSaveCommand();
+        } else if (PlayerCommand.SAVE.isAliasOf(command)) {
+            handleSaveCommand();
         } else {
             handleUnmatchedCommand(command);
         }
@@ -150,13 +148,7 @@ public class CommandHandler {
             currentLocation = game.getLocations().get(noun);
             game.getPlayer().setCurrentLocation(currentLocation);
             if (game.getMusic().MusicOptionIsYes()) game.getMusic().play(currentLocation.getMusic());
-            System.out.println(currentLocation.getDescription());
         }
-    }
-
-    private void handleDescribeCommand() {
-        Location currentLocation = game.getPlayer().getCurrentLocation();
-        System.out.println(currentLocation.getDescription());
     }
 
     private void handleTrade(String noun) {
