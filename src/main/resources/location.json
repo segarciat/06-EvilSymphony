@@ -26,7 +26,7 @@
   {
     "name": "Stage",
     "welcomeMessage": "You stand in a stage that is empty, apart from some music instruments.",
-    "NPCs": ["Director"],
+    "NPCs": ["Director","Security Guard"],
     "items" : [],
     "directions": [
       "Backstage",
@@ -39,7 +39,7 @@
   {
     "name": "Backstage",
     "welcomeMessage": "There are many other VIP fans peeking around... not as exciting as you imagined.",
-    "NPCs": ["Rocky"],
+    "NPCs": ["Rocky","Security Guard"],
     "items" : [],
     "directions": [
       "VIP Lounge",
@@ -55,12 +55,11 @@
   {
     "name": "Bathroom",
     "welcomeMessage": "The smell here reminds you of your humanity.",
-    "NPCs": [],
+    "NPCs": ["Jay"],
     "items" : ["Guitar Tuner"],
     "directions": [
       "Stage",
       "Backstage",
-      "VIP Lounge",
       "Bar"
     ],
     "music": "bathroomSong.wav"
@@ -69,7 +68,7 @@
   {
     "name": "Band Dressing Room",
     "welcomeMessage": "A mirror, two seats, and ward robe. Does a whole band really prepare here?",
-    "NPCs": [],
+    "NPCs": ["Larry"],
     "items" : ["Hair Gel"],
     "directions": [
       "Backstage"
@@ -80,7 +79,7 @@
   {
     "name": "Friends Dressing Room",
     "welcomeMessage": "Smaller than the band dressing room, but considering it's for a single person, it's impressive.",
-    "NPCs": [],
+    "NPCs": ["Diana"],
     "items" : ["Microphone"],
     "directions": [
       "Backstage"
@@ -91,7 +90,7 @@
   {
     "name": "Bar",
     "welcomeMessage": "Cleaner than the bathroom, and plenty of seats and snacks available.",
-    "NPCs": ["Johnny"],
+    "NPCs": ["Johnny","Diva"],
     "items" : [],
     "directions": [
       "Backstage",
