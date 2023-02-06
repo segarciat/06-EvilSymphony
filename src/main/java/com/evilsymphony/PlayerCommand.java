@@ -15,9 +15,8 @@ public enum PlayerCommand {
     LOOK("LOOK ITEM", "Examine an item to get more information", "EXAMINE", "CHECK", "INSPECT"),
     LOAD_GAME("LOAD GAME", "Starts a game from a saved file."),
     NEW_GAME("NEW GAME", "Starts a new game, without overwriting any saved files."),
-//    SAVE("SAVE", "Saves the game, overwriting the previous save file."),
+    SAVE("SAVE", "Saves the game, overwriting the previous save file."),
     MAP("MAP", "Displays the current map."),
-    DESCRIBE("DESCRIBE", "Describes the room the player is currently in."),
     MUSIC_ON("MUSIC ON", "Turns on background music"),
     MUSIC_OFF("MUSIC OFF", "Turns off background music"),
     MUSIC_VOL("MUSIC VOL", "Turns on background music");

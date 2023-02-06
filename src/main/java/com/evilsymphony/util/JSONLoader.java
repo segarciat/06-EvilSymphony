@@ -4,15 +4,12 @@ import com.evilsymphony.Player;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
+import java.io.*;
 import java.lang.reflect.Type;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -40,7 +37,8 @@ public class JSONLoader {
      * @return A list of objects of the type requested.
      */
     public static <T> List<T> loadFromJsonAsList(String jsonFile, Class<T> classObject) {
-        try (Reader reader = new InputStreamReader(Objects.requireNonNull(classObject.getClassLoader().getResourceAsStream(jsonFile)))) {
+        InputStream is = classObject.getClassLoader().getResourceAsStream(jsonFile);
+        try (Reader reader = new InputStreamReader(is != null? is: new FileInputStream(jsonFile))) {
             Type listType = TypeToken.getParameterized(List.class, classObject).getType();
             Gson gson = new Gson();
             return gson.fromJson(reader, listType);
@@ -50,11 +48,12 @@ public class JSONLoader {
     }
 
     public static boolean exists(String filename) {
-        return JSONLoader.class.getClassLoader().getResource(filename) != null;
+        return JSONLoader.class.getClassLoader().getResource(filename) != null || Files.exists(Path.of(filename));
     }
 
     public static Player loadPlayerFromJson(String savedPlayerJson) {
-        try (Reader reader = new InputStreamReader(Objects.requireNonNull(JSONLoader.class.getClassLoader().getResourceAsStream(savedPlayerJson)))) {
+        InputStream is = JSONLoader.class.getClassLoader().getResourceAsStream(savedPlayerJson);
+        try (Reader reader = new InputStreamReader(is != null? is: new FileInputStream(savedPlayerJson))) {
             Type playerType = TypeToken.get(Player.class).getType();
             Gson gson = new Gson();
             return gson.fromJson(reader, playerType);
