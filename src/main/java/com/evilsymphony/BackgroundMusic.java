@@ -12,10 +12,11 @@ class BackgroundMusic {
     private boolean musicOptionIsYes = true;
     private final String[] soundFiles = {"sound1.wav", "sound2.wav", "sound3.wav"};
     private int currentVolume = 12;
-    private final TextParser parser = new TextParser();
+    private TextParser parser;
+
 
     public BackgroundMusic(TextParser parser) {
-
+        this.parser = parser;
     }
 
     // Play the audio file
