@@ -1,8 +1,12 @@
-package com.evilsymphony;
+package com.evilsymphony.controller;
+
+import com.evilsymphony.*;
+import com.evilsymphony.util.Color;
+import com.evilsymphony.PlayerCommand;
 
 import java.util.List;
 
-class CommandHandler {
+public class CommandHandler {
     private final Game game;
 
     public CommandHandler(Game game) {

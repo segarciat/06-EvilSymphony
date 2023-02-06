@@ -1,4 +1,6 @@
-package com.evilsymphony;
+package com.evilsymphony.util;
+
+import com.evilsymphony.PlayerCommand;
 
 import java.io.BufferedReader;
 import java.io.IOException;

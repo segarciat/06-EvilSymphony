@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-class Location {
+public class Location {
     private final String name;
     private final String welcomeMessage;
     private final List<String> NPCs;

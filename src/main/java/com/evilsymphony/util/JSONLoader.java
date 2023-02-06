@@ -1,5 +1,6 @@
-package com.evilsymphony;
+package com.evilsymphony.util;
 
+import com.evilsymphony.Player;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -15,7 +16,7 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-class JSONLoader {
+public class JSONLoader {
 
     /**
      * Parses a JSON file that contains an array of objects as a Map with a string key an object as the value.

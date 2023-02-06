@@ -1,6 +1,6 @@
 package com.evilsymphony.main;
 
-import com.evilsymphony.Game;
+import com.evilsymphony.controller.Game;
 
 import java.io.IOException;
 
