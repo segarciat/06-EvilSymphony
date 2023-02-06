@@ -3,10 +3,12 @@ package com.evilsymphony;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.reflect.Type;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -41,6 +43,22 @@ class JSONLoader {
             Type listType = TypeToken.getParameterized(List.class, classObject).getType();
             Gson gson = new Gson();
             return gson.fromJson(reader, listType);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static boolean exists(String filename) {
+        String base = Objects.requireNonNull(JSONLoader.class.getClassLoader().getResource("")).getPath();
+        File file = new File(base, filename);
+        return Files.exists(file.toPath());
+    }
+
+    public static Player loadPlayerFromJson(String savedPlayerJson) {
+        try (Reader reader = new InputStreamReader(Objects.requireNonNull(JSONLoader.class.getClassLoader().getResourceAsStream(savedPlayerJson)))) {
+            Type playerType = TypeToken.get(Player.class).getType();
+            Gson gson = new Gson();
+            return gson.fromJson(reader, playerType);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
