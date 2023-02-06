@@ -41,7 +41,7 @@ public class Game {
     private Map<String, Item> items;
 
     private Player player;
-    private BackgroundMusic music = new BackgroundMusic();
+    private BackgroundMusic music = new BackgroundMusic(parser);
 
     CommandHandler cmdHandler = new CommandHandler(this);
 

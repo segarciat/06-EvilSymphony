@@ -10,7 +10,14 @@ class BackgroundMusic {
     private Clip clip;
     public boolean isPlaying = false;
     private boolean musicOptionIsYes = true;
+    private final String[] soundFiles = {"sound1.wav", "sound2.wav", "sound3.wav"};
+    private int currentVolume = 12;
+    private TextParser parser;
 
+
+    public BackgroundMusic(TextParser parser) {
+        this.parser = parser;
+    }
 
     // Play the audio file
     public void play(String songFilePath) {
@@ -27,7 +34,7 @@ class BackgroundMusic {
             clip = (Clip) AudioSystem.getLine(info);
             // Open the Clip object with the audio input stream
             clip.open(ais);
-            setVolume(12);
+            setVolume(currentVolume);
             // Start playing the audio
             clip.start();
             // To make the audio loop continuously, set the loop points.
@@ -36,7 +43,7 @@ class BackgroundMusic {
             isPlaying = true;
         } catch (UnsupportedAudioFileException | LineUnavailableException | IOException e) {
             // Print stack trace if an error occurs
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
@@ -65,12 +72,40 @@ class BackgroundMusic {
 
     // Prompt the user to set the volume
     public void promptVolume() {
-        // Scanner to read the user input
-        Scanner input = new Scanner(System.in);
-        System.out.print("Enter the audio level (1 - 20 ): ");
-        // Call the setVolume method with the user input as the argument
-        setVolume(input.nextInt());
+        currentVolume = Integer.parseInt(parser.prompt("Enter the audio level (1 - 20 ): ","^(1[0-9]|[1-9]|20)$","Please enter a number 1-20"));
+        setVolume(currentVolume);
+
     }
+
+    public boolean startSoundGame() {
+        System.out.println("Listen closely to the next three sounds to determine which is the lowest");
+        for (int i = 0; i < 3; i++) {
+            // Play each sound file
+            play(soundFiles[i]);
+
+            // 3 second pause
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+            // Stop the current sound
+            stop();
+        }
+
+        System.out.println("Which sound had the lowest note?");
+        System.out.println("Enter 1, 2, or 3");
+
+        // Playe's choice
+        Scanner input = new Scanner(System.in);
+        int choice = input.nextInt();
+        System.out.println("You chose sound " + choice + ".");
+
+        // randomize this somehow
+        return choice == 2;
+    }
+
 
     public boolean isPlaying() {
         return isPlaying;
