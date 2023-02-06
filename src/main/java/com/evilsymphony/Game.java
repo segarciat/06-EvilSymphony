@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Game {
 
@@ -22,7 +23,7 @@ public class Game {
     private static final String NPC_FILE = "npc.json";
     private static final String ITEM_FILE = "items.json";
 
-    private static final String PLAY_OR_QUIT_PROMPT_MESSAGE = "What would you like to do?\nPlay\tQuit\n";
+    private static final String PLAY_OR_QUIT_PROMPT_MESSAGE = "What would you like to do?\n";
     private static final String INVALID_COMMAND_ENTER_PLAY_OR_QUIT = "\nInvalid Command. Please enter Play or Quit\n";
     private static final String ENTER_COMMAND_PROMPT = "Please enter a command or type HELP >";
     private static final String INVALID_COMMAND_TYPE_HELP = "Invalid Command. To view list of valid commands, type HELP";
@@ -58,37 +59,67 @@ public class Game {
         System.out.printf("%s\n\n", splashText);
         System.out.printf("%s\n\n", gameSummary);
 
+        PlayerCommand[] options;
+        if (JSONLoader.exists(SAVED_PLAYER_JSON)) {
+            // Display load option.
+            options = new PlayerCommand[]{PlayerCommand.NEW_GAME, PlayerCommand.LOAD_GAME, PlayerCommand.QUIT};
+        } else {
+            // Do not display load option.
+            options = new PlayerCommand[]{PlayerCommand.NEW_GAME, PlayerCommand.QUIT};
+        }
+        String optionsText = Arrays.stream(options)
+                .map(cmd -> cmd.toString().replaceAll("_", " "))
+                .collect(Collectors.joining("\t")) + System.lineSeparator();
+
         // Prompt player to play or quit.
         String userInput = parser.prompt(
-                        PLAY_OR_QUIT_PROMPT_MESSAGE,
-                        parser.getCommandsRegex(PlayerCommand.PLAY, PlayerCommand.QUIT),
+                        PLAY_OR_QUIT_PROMPT_MESSAGE + optionsText,
+                        parser.getCommandsRegex(options),
                         Color.RED.setFontColor(INVALID_COMMAND_ENTER_PLAY_OR_QUIT)
                 ).toUpperCase();
 
-        if (userInput.equals(PlayerCommand.QUIT.toString())) {
+        System.out.println(userInput);
+
+        if (PlayerCommand.QUIT.isAliasOf(userInput)) {
             handleQuit();
-        } else if (userInput.equals(PlayerCommand.PLAY.toString())) {
-            clearScreen();
-            startGame();
+        } else if (PlayerCommand.NEW_GAME.isAliasOf(userInput)) {
+            startGame(true);
+        } else if (PlayerCommand.LOAD_GAME.isAliasOf(userInput)) {
+            startGame(false);
+        } else {
+            System.out.println("No options matched.");
         }
     }
 
     /**
      * Loads game resources and runs the game loop.
      */
-    private void startGame() {
+    private void startGame(boolean newGame) {
+        clearScreen();
         // Load resources.
-        locations = JSONLoader.loadFromJsonAsMap(LOCATION_FILE, Location.class, o -> o.getName().toUpperCase());
-        allNPCs = JSONLoader.loadFromJsonAsMap(NPC_FILE, NPC.class, o -> o.getName().toUpperCase());
+        String locationFile, npcFile;
+        if (newGame) {
+            locationFile = LOCATION_FILE;
+            npcFile = NPC_FILE;
+        } else {
+            locationFile = SAVED_LOCATIONS_JSON;
+            npcFile = SAVED_NPCS_JSON;
+        }
+
+        locations = JSONLoader.loadFromJsonAsMap(locationFile, Location.class, o -> o.getName().toUpperCase());
+        allNPCs = JSONLoader.loadFromJsonAsMap(npcFile, NPC.class, o -> o.getName().toUpperCase());
         items = JSONLoader.loadFromJsonAsMap(ITEM_FILE, Item.class, o -> o.getName().toUpperCase());
         gameMap = parser.loadText(MAP_FILE);
 
         // Set up player.
-        player = new Player();
-        player.setCurrentLocation(locations.get(STARTING_LOCATION));
+        if (newGame) {
+            player = new Player();
+            player.setCurrentLocation(locations.get(STARTING_LOCATION));
+        } else {
+            player = JSONLoader.loadPlayerFromJson(SAVED_PLAYER_JSON);
+        }
 
         music.play(player.getCurrentLocation().getMusic());
-
         System.out.println(player.getCurrentLocation().getDescription());
 
         while (true) {
