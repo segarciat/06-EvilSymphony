@@ -3,6 +3,8 @@ package com.evilsymphony.util;
 import com.evilsymphony.util.TextParser;
 
 import javax.sound.sampled.*;
+import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Scanner;
@@ -23,8 +25,9 @@ public class BackgroundMusic {
 
     // Play the audio file
     public void play(String songFilePath) {
+        songFilePath = "music" + File.separator + songFilePath;
         // Use the class loader to get the resource stream for the audio file.
-        InputStream audioStream = getClass().getClassLoader().getResourceAsStream(songFilePath);
+        BufferedInputStream audioStream = new BufferedInputStream(getClass().getClassLoader().getResourceAsStream(songFilePath));
         try {
             // Get an AudioInputStream from the audio resource stream. Represents a stream of audio data.
             AudioInputStream ais = AudioSystem.getAudioInputStream(audioStream);
