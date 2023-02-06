@@ -35,9 +35,15 @@ class CommandHandler {
             handleMusicOffCommand();
         } else if (PlayerCommand.MUSIC_VOL.isAliasOf(command)) {
             handleMusicVolCommand();
+        } else if (PlayerCommand.SAVE.isAliasOf(command)) {
+            handleSaveCommand();
         } else {
             handleUnmatchedCommand(command);
         }
+    }
+
+    private void handleSaveCommand() {
+        game.save();
     }
 
     private void handleMusicVolCommand() {

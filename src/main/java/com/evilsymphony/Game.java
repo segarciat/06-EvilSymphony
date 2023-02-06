@@ -23,7 +23,7 @@ public class Game {
     private static final String NPC_FILE = "npc.json";
     private static final String ITEM_FILE = "items.json";
 
-    private static final String PLAY_OR_QUIT_PROMPT_MESSAGE = "What would you like to do?\n";
+    private static final String WHAT_WOULD_YOU_LIKE_TO_DO = "What would you like to do?\n";
     private static final String INVALID_COMMAND_ENTER_PLAY_OR_QUIT = "\nInvalid Command. Please enter Play or Quit\n";
     private static final String ENTER_COMMAND_PROMPT = "Please enter a command or type HELP >";
     private static final String INVALID_COMMAND_TYPE_HELP = "Invalid Command. To view list of valid commands, type HELP";
@@ -59,26 +59,23 @@ public class Game {
         System.out.printf("%s\n\n", splashText);
         System.out.printf("%s\n\n", gameSummary);
 
+        // Display correct options, based on whether save file exists.
         PlayerCommand[] options;
-        if (JSONLoader.exists(SAVED_PLAYER_JSON)) {
-            // Display load option.
+        if (JSONLoader.exists(SAVED_PLAYER_JSON))
             options = new PlayerCommand[]{PlayerCommand.NEW_GAME, PlayerCommand.LOAD_GAME, PlayerCommand.QUIT};
-        } else {
-            // Do not display load option.
+        else
             options = new PlayerCommand[]{PlayerCommand.NEW_GAME, PlayerCommand.QUIT};
-        }
+
         String optionsText = Arrays.stream(options)
                 .map(cmd -> cmd.toString().replaceAll("_", " "))
                 .collect(Collectors.joining("\t")) + System.lineSeparator();
 
         // Prompt player to play or quit.
         String userInput = parser.prompt(
-                        PLAY_OR_QUIT_PROMPT_MESSAGE + optionsText,
+                        WHAT_WOULD_YOU_LIKE_TO_DO + optionsText,
                         parser.getCommandsRegex(options),
                         Color.RED.setFontColor(INVALID_COMMAND_ENTER_PLAY_OR_QUIT)
                 ).toUpperCase();
-
-        System.out.println(userInput);
 
         if (PlayerCommand.QUIT.isAliasOf(userInput)) {
             handleQuit();
@@ -153,6 +150,16 @@ public class Game {
      * Performs any necessary cleanup, including saving data.
      */
     public void handleQuit() {
+        clearScreen();
+        System.out.println("Thanks for playing!");
+    }
+
+
+    /**
+     * Saves the Player's data,including location and inventory.
+     * Saves all changes in the locations, as well as NPCs.
+     */
+    public void save() {
         Collection<Location> locationsColl = locations.values();
         Collection<NPC> npcColl = allNPCs.values();
 
@@ -163,9 +170,7 @@ public class Game {
         saveGameData(locationsColl, locationsCollType, SAVED_LOCATIONS_JSON);
         saveGameData(npcColl, npcCollType, SAVED_NPCS_JSON);
         saveGameData(player, playerType, SAVED_PLAYER_JSON);
-
-        clearScreen();
-        System.out.println("Thanks for playing!");
+        System.out.println(Color.GREEN.setFontColor("Saved game successfully!"));
     }
 
     /**
