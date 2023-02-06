@@ -21,6 +21,7 @@ public class Game {
     private static final String SPLASH_FILE = "splash.txt";
     private static final String MAP_FILE = "map.txt";
 
+    // Files packaged within jar resources.
     private static final String LOCATION_FILE = "location.json";
     private static final String NPC_FILE = "npc.json";
     private static final String ITEM_FILE = "items.json";
@@ -31,6 +32,8 @@ public class Game {
     private static final String INVALID_COMMAND_TYPE_HELP = "Invalid Command. To view list of valid commands, type HELP";
 
     private static final String STARTING_LOCATION = "MAIN HALL";
+
+    // Files created alongside the jar.
     public static final String SAVED_LOCATIONS_JSON = "savedLocations.json";
     public static final String SAVED_NPCS_JSON = "savedNPCs.json";
     public static final String SAVED_PLAYER_JSON = "savedPlayer.json";
@@ -119,7 +122,6 @@ public class Game {
         }
 
         music.play(player.getCurrentLocation().getMusic());
-        System.out.println(player.getCurrentLocation().getDescription());
 
         while (true) {
 
@@ -183,8 +185,7 @@ public class Game {
      * @param filename The name of the JSON file being saved to.
      */
     private void saveGameData(Object data, Type type, String filename) {
-        String base = Objects.requireNonNull(getClass().getClassLoader().getResource("")).getPath();
-        File file = new File(base, filename);
+        File file = new File(filename);
         try (JsonWriter writer = new JsonWriter(new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8)))) {
             Gson gson = new Gson();
             gson.toJson(data, type, writer);
@@ -200,15 +201,15 @@ public class Game {
     private void displayPlayerInfo() {
         Set<Item> inventory = player.getInventory();
 
+        // Location
+        Location currentLocation = player.getCurrentLocation();
+        System.out.println(currentLocation.getDescription());
+
         // Inventory
         StringBuilder sb = new StringBuilder("------------------- INVENTORY ---------------------\n");
         for (Item item: inventory)
             sb.append(String.format("\t%s%s", item.getName(), System.lineSeparator()));
         System.out.println(Color.YELLOW.setFontColor(sb.toString()));
-
-        // Location
-        Location currentLocation = player.getCurrentLocation();
-        System.out.printf("You are in: %s%s", currentLocation.getName(), System.lineSeparator());
     }
 
     /**
