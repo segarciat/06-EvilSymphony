@@ -12,7 +12,11 @@ class BackgroundMusic {
     private boolean musicOptionIsYes = true;
     private final String[] soundFiles = {"sound1.wav", "sound2.wav", "sound3.wav"};
     private int currentVolume = 12;
+    private final TextParser parser = new TextParser();
 
+    public BackgroundMusic(TextParser parser) {
+
+    }
 
     // Play the audio file
     public void play(String songFilePath) {
@@ -67,11 +71,7 @@ class BackgroundMusic {
 
     // Prompt the user to set the volume
     public void promptVolume() {
-        // Scanner to read the user input
-        Scanner input = new Scanner(System.in);
-        System.out.print("Enter the audio level (1 - 20 ): ");
-        // Call the setVolume method with the user input as the argument
-        currentVolume = input.nextInt();
+        currentVolume = Integer.parseInt(parser.prompt("Enter the audio level (1 - 20 ): ","^(1[0-9]|[1-9]|20)$","Please enter a number 1-20"));
         setVolume(currentVolume);
 
     }
